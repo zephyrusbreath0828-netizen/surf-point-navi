@@ -45,3 +45,32 @@ export interface PointData {
 }
 
 export type WindTag = 'calm' | 'off' | 'side-off' | 'side' | 'side-on' | 'on';
+
+export interface Evaluation {
+  score: number; // 0-100
+  stars: number; // 1-5
+  label: string;
+  reasons: string[];
+  windTag: WindTag;
+  windDirName: string;
+  windSpeed: number;
+  waveHeight: number | null;
+  waveDirName: string;
+  wavePeriod: number | null;
+  temp: number;
+}
+
+/** 取得した現在地 */
+export interface UserLocation {
+  lat: number;
+  lng: number;
+  accuracy: number; // m
+  ts: number;
+}
+
+/** ランキング1行分(評価+現在地からの距離) */
+export interface Ranked {
+  point: SurfPoint;
+  ev: Evaluation | null;
+  dist: number | null;
+}

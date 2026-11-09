@@ -1,19 +1,7 @@
-import type { Forecast, PointData, SurfPoint, WindTag } from '../types.ts';
+import type { Evaluation, Forecast, PointData, SurfPoint, WindTag } from '../types.ts';
 import { angDiff, dir16, sizeLabel } from './format.ts';
 
-export interface Evaluation {
-  score: number;
-  stars: number;
-  label: string;
-  reasons: string[];
-  windTag: WindTag;
-  windDirName: string;
-  windSpeed: number;
-  waveHeight: number | null;
-  waveDirName: string;
-  wavePeriod: number | null;
-  temp: number;
-}
+export type { Evaluation };
 
 /** 風の評価(最大40点): オフショアほど高く、オンショア&強風ほど低い */
 function windEval(p: SurfPoint, f: Forecast): { pts: number; tag: WindTag; reasons: string[] } {

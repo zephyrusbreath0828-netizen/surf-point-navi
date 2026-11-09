@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 @theme {
   --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, sans-serif;
@@ -45,4 +46,28 @@ body {
 /* ノッチ対応の下部余白 */
 .pb-safe {
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+}
+
+/* Leaflet */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: #dfe7ec;
+}
+.leaflet-popup-content-wrapper {
+  border-radius: 14px;
+}
+/* divIcon マーカーの余計な初期スタイルを消す */
+.ssn-marker {
+  background: transparent;
+  border: none;
+}
+@keyframes ssn-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
 }

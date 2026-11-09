@@ -1,14 +1,10 @@
-import type { SurfPoint } from '../types.ts';
+import type { Ranked } from '../types.ts';
 import type { Evaluation } from '../lib/score.ts';
 import { WIND_TAG_LABEL, dir16, fmtHM, sizeLabel, todayLabel } from '../lib/format.ts';
+import { fmtKm } from '../lib/distance.ts';
 import { StarRating } from './StarRating.tsx';
 import { ScoreRing } from './ScoreRing.tsx';
-import { IconRefresh } from './icons.tsx';
-
-export interface Ranked {
-  point: SurfPoint;
-  ev: Evaluation | null;
-}
+import { IconPin, IconRefresh } from './icons.tsx';
 
 function windChipClass(tag: Evaluation['windTag']): string {
   if (tag === 'off' || tag === 'side-off') return 'bg-lagoon-500/10 text-lagoon-600';
@@ -39,6 +35,12 @@ function RankCard({ rank, r, onOpen }: { rank: number; r: Ranked; onOpen: (id: s
           <div className="flex items-center gap-2 mt-1">
             <StarRating stars={ev.stars} />
             <span className="text-xs text-neutral-500">{ev.label}</span>
+            {r.dist != null && (
+              <span className="ml-auto inline-flex items-center gap-0.5 text-[11px] text-neutral-400 shrink-0">
+                <IconPin className="w-3 h-3" />
+                {fmtKm(r.dist)}
+              </span>
+            )}
           </div>
         </div>
         <ScoreRing score={ev.score} id={`rank${rank}`} />
@@ -145,7 +147,10 @@ export function HomeScreen({ ranked, status, stale, lastFetched, refreshing, onR
                 </span>
                 <span className="flex-1 min-w-0">
                   <span className="block font-bold text-sm text-ocean-950 truncate">{r.point.name}</span>
-                  <span className="block text-[11px] text-neutral-400 truncate">{r.ev ? r.ev.label : 'データ取得中…'}</span>
+                  <span className="block text-[11px] text-neutral-400 truncate">
+                    {r.ev ? r.ev.label : 'データ取得中…'}
+                    {r.dist != null ? `・現在地から ${fmtKm(r.dist)}` : ''}
+                  </span>
                 </span>
                 {r.ev && <StarRating stars={r.ev.stars} className="w-3.5 h-3.5" />}
                 {r.ev && <span className="font-display font-extrabold text-ocean-800 w-8 text-right shrink-0">{r.ev.score}</span>}

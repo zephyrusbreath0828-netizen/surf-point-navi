@@ -1,6 +1,7 @@
 import type { PointData, SurfPoint } from '../types.ts';
 import { evaluatePoint, currentForecast, bestHourIdx } from '../lib/score.ts';
 import { WIND_TAG_LABEL, bottomLabel, dir16, fmtHM, levelLabel, sizeLabel, sizeRangeLabel } from '../lib/format.ts';
+import { fmtKm } from '../lib/distance.ts';
 import { StarRating } from './StarRating.tsx';
 import { ScoreRing } from './ScoreRing.tsx';
 import { HourlyChart } from './HourlyChart.tsx';
@@ -20,9 +21,10 @@ function Item({ icon, label, value, sub }: { icon: ReactNode; label: string; val
   );
 }
 
-export function DetailScreen({ point, pd, onBack, onEdit }: {
+export function DetailScreen({ point, pd, dist, onBack, onEdit }: {
   point: SurfPoint;
   pd: PointData | undefined;
+  dist?: number | null;
   onBack: () => void;
   onEdit: () => void;
 }) {
@@ -49,6 +51,7 @@ export function DetailScreen({ point, pd, onBack, onEdit }: {
           <span className="px-2 py-0.5 rounded-full bg-white/10">なじみ {sizeRangeLabel(point.sizeMin, point.sizeMax)}</span>
           <span className="px-2 py-0.5 rounded-full bg-white/10">{levelLabel(point.level)}</span>
           <span className="px-2 py-0.5 rounded-full bg-white/10">{bottomLabel(point.bottom)}</span>
+          {dist != null && <span className="px-2 py-0.5 rounded-full bg-white/10">現在地から {fmtKm(dist)}</span>}
         </div>
       </header>
 

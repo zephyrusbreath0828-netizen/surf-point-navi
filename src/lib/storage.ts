@@ -1,8 +1,9 @@
-import type { Bottom, Level, PointData, SurfPoint } from '../types.ts';
+import type { Bottom, Level, PointData, SurfPoint, UserLocation } from '../types.ts';
 import { DEFAULT_POINTS } from './defaultPoints.ts';
 
 const POINTS_KEY = 'ssn.points.v1';
 const CACHE_KEY = 'ssn.cache.v1';
+const LOC_KEY = 'ssn.loc.v1';
 
 function clamp(v: number, lo: number, hi: number): number {
   return Math.max(lo, Math.min(hi, v));
@@ -92,4 +93,26 @@ export function saveForecastCache(c: ForecastCache): void {
 export function isSameTokyoDay(ts: number): boolean {
   const f = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit' });
   return f.format(new Date(ts)) === f.format(new Date());
+}
+
+export function loadLocation(): UserLocation | null {
+  try {
+    const raw = localStorage.getItem(LOC_KEY);
+    if (!raw) return null;
+    const j = JSON.parse(raw);
+    if (typeof j?.lat === 'number' && typeof j?.lng === 'number') {
+      return { lat: j.lat, lng: j.lng, accuracy: Number(j.accuracy) || 0, ts: Number(j.ts) || Date.now() };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveLocation(l: UserLocation): void {
+  try {
+    localStorage.setItem(LOC_KEY, JSON.stringify(l));
+  } catch {
+    /* 無視 */
+  }
 }
