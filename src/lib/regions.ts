@@ -29,6 +29,23 @@ function prefRank(p: string): number {
   return i === -1 ? PREF_ORDER.length : i;
 }
 
+/** 地方(pack ID) → 都道府県リスト。登録画面の県プルダウンで使用 */
+const REGION_PREFS: Record<string, string[]> = {
+  'japan-hokkaido': ['北海道'],
+  'japan-tohoku': ['青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県'],
+  'japan-kanto': ['茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県'],
+  'japan-chubu': ['新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県', '三重県'],
+  'japan-kinki': ['滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県'],
+  'japan-chugoku': ['鳥取県', '島根県', '岡山県', '広島県', '山口県'],
+  'japan-shikoku': ['徳島県', '香川県', '愛媛県', '高知県'],
+  'japan-kyushu': ['福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県'],
+  'japan-okinawa': ['沖縄県'],
+};
+
+export function prefsForRegion(regionId: string): string[] {
+  return REGION_PREFS[regionId] ?? [];
+}
+
 /** 絞り込み済み(ranked)に出現する都道府県を標準順で返す */
 export function prefecturesFor(ranked: Ranked[], region: string | 'all'): string[] {
   const seen = new Set<string>();

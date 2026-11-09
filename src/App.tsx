@@ -10,9 +10,17 @@ import { HomeScreen } from './components/HomeScreen.tsx';
 import { DetailScreen } from './components/DetailScreen.tsx';
 import { MapScreen } from './components/MapScreen.tsx';
 import { ManageScreen } from './components/ManageScreen.tsx';
+import { RegisterScreen } from './components/RegisterScreen.tsx';
 import { TabBar } from './components/TabBar.tsx';
+import { genId } from './lib/normalize.ts';
+import { addUserPointMeta } from './lib/userPoints.ts';
 
-type View = { name: 'home' } | { name: 'detail'; id: string } | { name: 'map' } | { name: 'manage'; edit?: string };
+type View =
+  | { name: 'home' }
+  | { name: 'detail'; id: string }
+  | { name: 'map' }
+  | { name: 'register' }
+  | { name: 'manage'; edit?: string };
 
 export default function App() {
   const [points, setPoints] = useState<SurfPoint[]>(loadPoints);
@@ -60,6 +68,7 @@ export default function App() {
     return () => window.clearInterval(t);
   }, [refresh]);
 
+
   const updatePoints = useCallback(
     (pts: SurfPoint[]) => {
       setPoints(pts);
@@ -69,6 +78,30 @@ export default function App() {
     },
     [refresh]
   );
+  // 写真(EXIF GPS)or 地図タップで得た新規ポイントを登録(Open-Meteo評価・検索対象に自動追加)
+  const addUserPoint = useCallback(
+    (input: { name: string; prefecture: string; region: string; lat: number; lon: number; comment: string }) => {
+      const p: SurfPoint = {
+        id: genId(),
+        name: input.name,
+        prefecture: input.prefecture,
+        region: input.region,
+        lat: input.lat,
+        lon: input.lon,
+        goodWind: [],
+        badWind: [],
+        goodSwell: [],
+        waveMin: 0.5,
+        waveMax: 3.0,
+        level: 'beginner',
+        bottom: 'sand',
+      };
+      addUserPointMeta(p.id, input.comment);
+      updatePoints([...pointsRef.current, p]);
+    },
+    [updatePoints]
+  );
+
 
   const ranked = useMemo<Ranked[]>(
     () =>
@@ -111,6 +144,8 @@ export default function App() {
         onOpen={(id) => setView({ name: 'detail', id })}
       />
     );
+  } else if (view.name === 'register') {
+    content = <RegisterScreen points={points} onSave={addUserPoint} />;
   } else if (view.name === 'manage') {
     content = <ManageScreen points={points} onSaveAll={updatePoints} initialEdit={view.edit} />;
   } else {
@@ -134,8 +169,8 @@ export default function App() {
     <div className="mx-auto max-w-md min-h-screen bg-sand-50 shadow-md">
       {content}
       <TabBar
-        tab={view.name === 'manage' ? 'manage' : view.name === 'map' ? 'map' : 'home'}
-        onTab={(t) => setView(t === 'home' ? { name: 'home' } : t === 'map' ? { name: 'map' } : { name: 'manage' })}
+        tab={view.name === 'manage' ? 'manage' : view.name === 'register' ? 'register' : view.name === 'map' ? 'map' : 'home'}
+        onTab={(t) => setView(t === 'home' ? { name: 'home' } : t === 'map' ? { name: 'map' } : t === 'register' ? { name: 'register' } : { name: 'manage' })}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { loadAllPoints, packLabel } from '../lib/loadPoints.ts';
 import { bottomLabel, letterJP, levelLabel, sizeRangeLabel } from '../lib/format.ts';
 import { PointForm } from './PointForm.tsx';
 import { IconPlus, IconTrash } from './icons.tsx';
+import { isUserPoint, removeUserPointMeta, clearUserMeta } from '../lib/userPoints.ts';
 import { APP_VERSION } from '../lib/version.ts';
 
 export function ManageScreen({ points, onSaveAll, initialEdit }: {
@@ -29,12 +30,15 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
   };
 
   const remove = (id: string) => {
+    if (!isUserPoint(id)) return; // 標準収録ポイントは削除不可
+    removeUserPointMeta(id);
     onSaveAll(points.filter((x) => x.id !== id));
     setEditing(null);
   };
 
   const reset = () => {
     if (window.confirm('全ポイントをパックJSONの初期状態に戻します。よろしいですか?')) {
+      clearUserMeta();
       onSaveAll(loadAllPoints());
     }
   };
@@ -66,7 +70,8 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
                   .join('・')}
               </div>
             </button>
-            <button
+            {isUserPoint(p.id) && (
+              <button
               aria-label={`${p.name}を削除`}
               onClick={() => {
                 if (window.confirm(`「${p.name}」を削除しますか?`)) remove(p.id);
@@ -75,6 +80,7 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
             >
               <IconTrash className="w-5 h-5" />
             </button>
+            )}
           </div>
         ))}
 
