@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { SurfPoint } from '../types.ts';
-import { loadRegionData, regionLabel } from '../data/index.ts';
+import { loadAllPoints, packLabel } from '../lib/loadPoints.ts';
 import { bottomLabel, letterJP, levelLabel, sizeRangeLabel } from '../lib/format.ts';
 import { PointForm } from './PointForm.tsx';
 import { IconPlus, IconTrash } from './icons.tsx';
@@ -33,8 +33,8 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
   };
 
   const reset = () => {
-    if (window.confirm('全ポイントを地方JSONの初期状態に戻します。よろしいですか?')) {
-      onSaveAll(loadRegionData());
+    if (window.confirm('全ポイントをパックJSONの初期状態に戻します。よろしいですか?')) {
+      onSaveAll(loadAllPoints());
     }
   };
 
@@ -54,7 +54,7 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
             <button className="flex-1 min-w-0 text-left" onClick={() => setEditing(p)}>
               <div className="font-bold text-ocean-950 truncate">
                 {p.name}
-                <span className="ml-2 text-[10px] font-normal text-neutral-400">{regionLabel(p.region)}</span>
+                <span className="ml-2 text-[10px] font-normal text-neutral-400">{packLabel(p.region)}</span>
               </div>
               <div className="text-[11px] text-neutral-400 font-mono mt-0.5">
                 {p.lat.toFixed(4)}, {p.lon.toFixed(4)}
@@ -87,7 +87,7 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
 
         <div className="pt-1">
           <button onClick={reset} className="text-xs text-neutral-400 underline">
-            地方JSONの初期データに戻す
+            パックJSONの初期データに戻す
           </button>
         </div>
 

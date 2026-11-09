@@ -21,19 +21,19 @@
 
 ## ポイントデータの構造(地方別 JSON)
 
-`src/data/regions/` 配下に地方ごとの JSON を置きます(起動時に全ファイル自動読み込み・結合)。
+`src/data/packs/` 配下に地域ごとの JSON(パック)を置きます(起動時に全ファイル自動読み込み・結合)。
 
 ```text
-src/data/regions/
-  hokkaido.json   北海道
-  tohoku.json     東北
-  kanto.json      関東
-  chubu.json      中部
-  kinki.json      近畿
-  chugoku.json    中国
-  shikoku.json    四国(生見/内妻/小松/入野/双海)
-  kyushu.json     九州
-  okinawa.json    沖縄
+src/data/packs/
+  japan-hokkaido.json   北海道
+  japan-tohoku.json     東北
+  japan-kanto.json      関東
+  japan-chubu.json      中部
+  japan-kinki.json      近畿
+  japan-chugoku.json    中国
+  japan-shikoku.json    四国(生見/内妻/小松/入野/双海)
+  japan-kyushu.json     九州
+  japan-okinawa.json    沖縄
 ```
 
 JSON 形式(1 ファイル = 1 地方の配列):
@@ -60,17 +60,16 @@ JSON 形式(1 ファイル = 1 地方の配列):
 
 ### 新しい地域の追加方法
 
-**コード変更は不要**です。`src/data/regions/` に新しい JSON を置くだけ。
+**コード変更は不要**です。`src/data/packs/` に新しい JSON を置くだけ。
 
 ```text
-src/data/regions/hawaii.json      ← 追加するだけ
-src/data/regions/indonesia.json
-src/data/regions/california.json
+src/data/packs/usa-california.json   ← 追加するだけ
+src/data/packs/usa-hawaii.json
+src/data/packs/indonesia-bali.json
+src/data/packs/australia-east.json
 ```
 
-読み込みは `src/data/index.ts` の `loadRegionData()` が `import.meta.glob` で全 JSON を自動検出し、1 つの配列に結合します(従来の `[...hokkaido, ...tohoku, ...]` 相当)。表示名を付けたい場合は同ファイルの `REGION_LABELS` に 1 行追加します(未登録の場合はファイル名がそのまま表示)。
-
-`src/lib/defaultPoints.ts` は旧バージョンとの互換用モジュールで、`loadRegionData()` の結合結果を `SurfPoint[]` として再エクスポートします(実データは地方 JSON が唯一のソース)。
+読み込みは `src/lib/loadPoints.ts` の `loadAllPoints()` が `import.meta.glob` で全パック JSON を自動検出し、1 つの配列に結合します(`[...japanHokkaido, ...japanTohoku, ...]` 相当)。型は `src/types.ts` の `SurfPoint` が単一定義で、ロード時に値が検証・正規化されるため JSON 側の誤記も起動時に無害化されます。表示名を付けたい場合は `loadPoints.ts` の `PACK_LABELS` に 1 行追加します(未登録の場合はファイル名がそのまま表示)。
 
 ## スコアリング仕様(独自ロジック)
 

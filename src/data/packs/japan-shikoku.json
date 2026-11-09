@@ -1,0 +1,62 @@
+[
+  {
+    "id": "ikumi",
+    "name": "生見海岸",
+    "prefecture": "高知県",
+    "lat": 33.525,
+    "lon": 134.288,
+    "goodWind": ["N", "NW"],
+    "badWind": ["S", "SE"],
+    "goodSwell": ["SE", "E"],
+    "waveMin": 0.8,
+    "waveMax": 2.5
+  },
+  {
+    "id": "uchizuma",
+    "name": "内妻海岸",
+    "prefecture": "徳島県",
+    "lat": 33.661,
+    "lon": 134.3985,
+    "goodWind": ["N", "NW"],
+    "badWind": ["S", "SE"],
+    "goodSwell": ["S", "SE"],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "komatsu",
+    "name": "小松海岸",
+    "prefecture": "徳島県",
+    "lat": 34.056,
+    "lon": 134.607,
+    "goodWind": ["NW", "W"],
+    "badWind": ["E", "SE"],
+    "goodSwell": ["S", "SE"],
+    "waveMin": 0.4,
+    "waveMax": 1.2
+  },
+  {
+    "id": "irino",
+    "name": "入野海岸",
+    "prefecture": "高知県",
+    "lat": 33.0211,
+    "lon": 133.0163,
+    "goodWind": ["N", "NE"],
+    "badWind": ["S", "SE"],
+    "goodSwell": ["SW", "S"],
+    "waveMin": 0.8,
+    "waveMax": 2.5
+  },
+  {
+    "id": "futami",
+    "name": "双海海岸",
+    "prefecture": "愛媛県",
+    "lat": 33.67,
+    "lon": 132.63,
+    "goodWind": ["E", "NE"],
+    "badWind": ["W", "NW"],
+    "goodSwell": ["SW", "W"],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  }
+]

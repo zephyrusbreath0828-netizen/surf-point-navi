@@ -1,5 +1,5 @@
 import type { Bottom, Level, PointData, SurfPoint, UserLocation } from '../types.ts';
-import { loadRegionData } from '../data/index.ts';
+import { loadAllPoints } from './loadPoints.ts';
 import { normalizePoint } from './normalize.ts';
 
 const POINTS_KEY = 'ssn.points.v2'; // v2: 地方JSONスキーマ(goodWind/badWind/goodSwell/waveMin/waveMax)
@@ -19,7 +19,7 @@ export function loadPoints(): SurfPoint[] {
   } catch {
     /* 壊れていれば地方JSONの初期値へ */
   }
-  return loadRegionData();
+  return loadAllPoints();
 }
 
 export function savePoints(points: SurfPoint[]): void {

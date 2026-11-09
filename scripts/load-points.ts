@@ -5,7 +5,7 @@ import { normalizePoint } from '../src/lib/normalize.ts';
 import type { SurfPoint } from '../src/lib/types.ts';
 
 export function loadPointsForCheck(): SurfPoint[] {
-  const dir = new URL('../src/data/regions/', import.meta.url).pathname;
+  const dir = new URL('../src/data/packs/', import.meta.url).pathname;
   const out: SurfPoint[] = [];
   for (const f of readdirSync(dir).filter((n) => n.endsWith('.json')).sort()) {
     const rows = JSON.parse(readFileSync(join(dir, f), 'utf8'));
