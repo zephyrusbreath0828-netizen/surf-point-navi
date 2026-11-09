@@ -70,6 +70,8 @@ src/data/regions/california.json
 
 読み込みは `src/data/index.ts` の `loadRegionData()` が `import.meta.glob` で全 JSON を自動検出し、1 つの配列に結合します(従来の `[...hokkaido, ...tohoku, ...]` 相当)。表示名を付けたい場合は同ファイルの `REGION_LABELS` に 1 行追加します(未登録の場合はファイル名がそのまま表示)。
 
+`src/lib/defaultPoints.ts` は旧バージョンとの互換用モジュールで、`loadRegionData()` の結合結果を `SurfPoint[]` として再エクスポートします(実データは地方 JSON が唯一のソース)。
+
 ## スコアリング仕様(独自ロジック)
 
 0〜100 点 = **風 40 点**(goodWind/badWind への近さ×風速) + **うねり 45 点**(goodSwell 入射 50%・なじみサイズ 35%・周期 15%)。
