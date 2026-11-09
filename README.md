@@ -29,12 +29,13 @@ src/data/packs/
   japan-tohoku.json     東北（55 点）
   japan-kanto.json      関東（71 点）
   japan-chubu.json      中部（57 点）
-  japan-kinki.json      近畿（13 点）
+  japan-kinki.json      近畿（51 点）
   japan-chugoku.json    中国（50 点）
   japan-shikoku.json    四国（33 点）
   japan-kyushu.json     九州（44 点）
   japan-okinawa.json    沖縄（14 点）
 ```
+
 
 
 JSON 形式(1 ファイル = 1 地方の配列):
