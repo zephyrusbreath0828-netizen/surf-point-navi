@@ -1,10 +1,34 @@
 import { useState } from 'react';
-import type { Bottom, Level, SurfPoint } from '../types.ts';
-import { DIRS16, bottomLabel, dir16, levelLabel, sizeLabel } from '../lib/format.ts';
-import { genId } from '../lib/storage.ts';
+import type { Bottom, DirLetter, Level, SurfPoint } from '../types.ts';
+import { DIRS16, LETTERS16, bottomLabel, levelLabel, sizeLabel } from '../lib/format.ts';
+import { genId } from '../lib/normalize.ts';
 
 const inputCls =
   'w-full rounded-xl border border-sand-300 bg-sand-50 px-3 py-2.5 text-base text-ocean-950 focus:outline-none focus:ring-2 focus:ring-lagoon-500';
+
+/** 16方位の複数選択チップ */
+function DirPicker({ value, onChange }: { value: DirLetter[]; onChange: (v: DirLetter[]) => void }) {
+  return (
+    <div className="flex flex-wrap gap-1">
+      {LETTERS16.map((l, i) => {
+        const sel = value.includes(l);
+        return (
+          <button
+            key={l}
+            type="button"
+            onClick={() => onChange(sel ? value.filter((x) => x !== l) : [...value, l])}
+            className={`px-2 py-1 rounded-lg border text-[10px] font-bold transition-colors ${
+              sel ? 'bg-ocean-900 text-white border-ocean-900' : 'bg-white text-ocean-800 border-sand-300'
+            }`}
+          >
+            {DIRS16[i]}
+            <span className="ml-1 font-normal opacity-50">{l}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 export function PointForm({ initial, onSave, onDelete, onClose }: {
   initial: SurfPoint | 'new';
@@ -14,33 +38,39 @@ export function PointForm({ initial, onSave, onDelete, onClose }: {
 }) {
   const isNew = initial === 'new';
   const [name, setName] = useState(isNew ? '' : initial.name);
+  const [prefecture, setPrefecture] = useState(isNew ? '' : initial.prefecture);
   const [lat, setLat] = useState(isNew ? '' : String(initial.lat));
-  const [lng, setLng] = useState(isNew ? '' : String(initial.lng));
-  const [bearing, setBearing] = useState(isNew ? 180 : initial.bearing);
-  const [sizeMin, setSizeMin] = useState(isNew ? 0.6 : initial.sizeMin);
-  const [sizeMax, setSizeMax] = useState(isNew ? 1.4 : initial.sizeMax);
+  const [lon, setLon] = useState(isNew ? '' : String(initial.lon));
+  const [goodWind, setGoodWind] = useState<DirLetter[]>(isNew ? [] : initial.goodWind);
+  const [badWind, setBadWind] = useState<DirLetter[]>(isNew ? [] : initial.badWind);
+  const [goodSwell, setGoodSwell] = useState<DirLetter[]>(isNew ? [] : initial.goodSwell);
+  const [waveMin, setWaveMin] = useState(isNew ? 0.6 : initial.waveMin);
+  const [waveMax, setWaveMax] = useState(isNew ? 1.4 : initial.waveMax);
   const [level, setLevel] = useState<Level>(isNew ? 'beginner' : initial.level);
   const [bottom, setBottom] = useState<Bottom>(isNew ? 'sand' : initial.bottom);
   const [err, setErr] = useState<string | null>(null);
 
-  const offDir = (bearing + 180) % 360;
   const latNum = Number(lat);
-  const lngNum = Number(lng);
-  const mapOk = Number.isFinite(latNum) && Number.isFinite(lngNum);
+  const lonNum = Number(lon);
+  const mapOk = Number.isFinite(latNum) && Number.isFinite(lonNum);
 
   const save = () => {
     if (!name.trim()) return setErr('ポイント名を入力してください');
-    if (!Number.isFinite(latNum) || latNum < -90 || latNum > 90) return setErr('緯度が不正です(例: 33.5283)');
-    if (!Number.isFinite(lngNum) || lngNum < -180 || lngNum > 180) return setErr('経度が不正です(例: 134.2820)');
-    if (sizeMin >= sizeMax) return setErr('なじみサイズの下限は上限より小さくしてください');
+    if (!Number.isFinite(latNum) || latNum < -90 || latNum > 90) return setErr('緯度が不正です(例: 33.525)');
+    if (!Number.isFinite(lonNum) || lonNum < -180 || lonNum > 180) return setErr('経度が不正です(例: 134.288)');
+    if (waveMin >= waveMax) return setErr('なじみサイズの下限は上限より小さくしてください');
     onSave({
       id: isNew ? genId() : (initial as SurfPoint).id,
       name: name.trim(),
+      prefecture: prefecture.trim(),
+      region: isNew ? 'custom' : (initial as SurfPoint).region,
       lat: latNum,
-      lng: lngNum,
-      bearing,
-      sizeMin,
-      sizeMax,
+      lon: lonNum,
+      goodWind,
+      badWind,
+      goodSwell,
+      waveMin,
+      waveMax,
       level,
       bottom,
     });
@@ -68,6 +98,11 @@ export function PointForm({ initial, onSave, onDelete, onClose }: {
           </div>
 
           <div>
+            <label className="text-xs font-bold text-neutral-500 mb-1 block">都道府県</label>
+            <input className={inputCls} value={prefecture} onChange={(e) => setPrefecture(e.target.value)} placeholder="例: 高知県" />
+          </div>
+
+          <div>
             <label className="text-xs font-bold text-neutral-500 mb-1 block">緯度・経度</label>
             <div className="grid grid-cols-2 gap-2">
               <input
@@ -77,22 +112,22 @@ export function PointForm({ initial, onSave, onDelete, onClose }: {
                 step="0.0001"
                 value={lat}
                 onChange={(e) => setLat(e.target.value)}
-                placeholder="緯度 33.5283"
+                placeholder="緯度 33.525"
               />
               <input
                 className={inputCls}
                 type="number"
                 inputMode="decimal"
                 step="0.0001"
-                value={lng}
-                onChange={(e) => setLng(e.target.value)}
-                placeholder="経度 134.2820"
+                value={lon}
+                onChange={(e) => setLon(e.target.value)}
+                placeholder="経度 134.288"
               />
             </div>
             {mapOk && (
               <a
                 className="inline-block mt-1.5 text-[11px] text-lagoon-600 underline"
-                href={`https://www.openstreetmap.org/?mlat=${latNum}&mlon=${lngNum}#map=14/${latNum}/${lngNum}`}
+                href={`https://www.openstreetmap.org/?mlat=${latNum}&mlon=${lonNum}#map=14/${latNum}/${lonNum}`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -102,44 +137,35 @@ export function PointForm({ initial, onSave, onDelete, onClose }: {
           </div>
 
           <div>
-            <label className="text-xs font-bold text-neutral-500 mb-1 block">ポイントの向き(海側)</label>
-            <div className="grid grid-cols-4 gap-1.5">
-              {DIRS16.map((d, i) => {
-                const deg = i * 22.5;
-                const sel = deg === bearing;
-                return (
-                  <button
-                    key={d}
-                    onClick={() => setBearing(deg)}
-                    className={`text-xs py-2 rounded-lg border transition-colors ${
-                      sel ? 'bg-ocean-900 text-white border-ocean-900 font-bold' : 'bg-white text-ocean-800 border-sand-300'
-                    }`}
-                  >
-                    {d}
-                  </button>
-                );
-              })}
-            </div>
-            <p className="mt-2 text-[11px] text-neutral-500 leading-relaxed">
-              うねりは{dir16(bearing)}から入るとまっすぐ入り、{dir16(offDir)}風がオフショアになります。
-            </p>
+            <label className="text-xs font-bold text-neutral-500 mb-1 block">良い風向(複数選択可)</label>
+            <DirPicker value={goodWind} onChange={setGoodWind} />
+          </div>
+
+          <div>
+            <label className="text-xs font-bold text-neutral-500 mb-1 block">悪い風向(複数選択可)</label>
+            <DirPicker value={badWind} onChange={setBadWind} />
+          </div>
+
+          <div>
+            <label className="text-xs font-bold text-neutral-500 mb-1 block">良いうねり方向(複数選択可)</label>
+            <DirPicker value={goodSwell} onChange={setGoodSwell} />
           </div>
 
           <div>
             <label className="text-xs font-bold text-neutral-500 mb-1 block">なじみサイズ(良い波になる波高)</label>
             <div className="text-[11px] text-neutral-500 mb-1">
-              下限 {sizeMin.toFixed(1)}m({sizeLabel(sizeMin)})〜 上限 {sizeMax.toFixed(1)}m({sizeLabel(sizeMax)})
+              下限 {waveMin.toFixed(1)}m({sizeLabel(waveMin)})〜 上限 {waveMax.toFixed(1)}m({sizeLabel(waveMax)})
             </div>
             <input
               type="range"
               min="0.2"
-              max="3"
+              max="4"
               step="0.1"
-              value={sizeMin}
+              value={waveMin}
               onChange={(e) => {
                 const v = Number(e.target.value);
-                setSizeMin(v);
-                if (v > sizeMax - 0.1) setSizeMax(Math.min(3, v + 0.1));
+                setWaveMin(v);
+                if (v > waveMax - 0.1) setWaveMax(Math.min(4, v + 0.1));
               }}
               className="w-full accent-lagoon-600"
               aria-label="なじみサイズの下限"
@@ -147,13 +173,13 @@ export function PointForm({ initial, onSave, onDelete, onClose }: {
             <input
               type="range"
               min="0.3"
-              max="3"
+              max="4"
               step="0.1"
-              value={sizeMax}
+              value={waveMax}
               onChange={(e) => {
                 const v = Number(e.target.value);
-                setSizeMax(v);
-                if (v < sizeMin + 0.1) setSizeMin(Math.max(0.2, v - 0.1));
+                setWaveMax(v);
+                if (v < waveMin + 0.1) setWaveMin(Math.max(0.2, v - 0.1));
               }}
               className="w-full accent-ocean-800"
               aria-label="なじみサイズの上限"
@@ -167,6 +193,7 @@ export function PointForm({ initial, onSave, onDelete, onClose }: {
                 {(['beginner', 'intermediate'] as Level[]).map((l) => (
                   <button
                     key={l}
+                    type="button"
                     onClick={() => setLevel(l)}
                     className={`flex-1 text-xs py-2 ${level === l ? 'bg-ocean-900 text-white font-bold' : 'bg-white text-neutral-500'}`}
                   >
@@ -181,6 +208,7 @@ export function PointForm({ initial, onSave, onDelete, onClose }: {
                 {(['sand', 'mix', 'reef'] as Bottom[]).map((b) => (
                   <button
                     key={b}
+                    type="button"
                     onClick={() => setBottom(b)}
                     className={`flex-1 text-xs py-2 ${bottom === b ? 'bg-ocean-900 text-white font-bold' : 'bg-white text-neutral-500'}`}
                   >

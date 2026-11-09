@@ -1,18 +1,35 @@
 export type Level = 'beginner' | 'intermediate';
 export type Bottom = 'sand' | 'reef' | 'mix';
 
-/** サーフポイントの条件マスタ(全てユーザー編集可・ブラウザ保存) */
+/** 16方位の方位記号(N, NNE, NE, ...)。地方JSONの goodWind/badWind/goodSwell で使用 */
+export type DirLetter =
+  | 'N' | 'NNE' | 'NE' | 'ENE'
+  | 'E' | 'ESE' | 'SE' | 'SSE'
+  | 'S' | 'SSW' | 'SW' | 'WSW'
+  | 'W' | 'WNW' | 'NW' | 'NNW';
+
+/**
+ * サーフポイント(地方別JSON + ユーザー追加を正規化した形)。
+ * level / bottom はJSONでは省略可能(デフォルト: beginner / sand)。
+ */
 export interface SurfPoint {
   id: string;
   name: string;
+  prefecture: string;
+  /** 担当地域のID(ファイル名。shikoku / kanto / hawaii ...) */
+  region: string;
   lat: number;
-  lng: number;
-  /** ポイントが海に向いている方位(度・0=北)。この方向からうねりが入るとまっすぐ入る */
-  bearing: number;
-  /** なじみサイズ(良い波になる波高レンジ・下限 m) */
-  sizeMin: number;
-  /** なじみサイズ(上限 m) */
-  sizeMax: number;
+  lon: number;
+  /** 良い風向(オフショア側) */
+  goodWind: DirLetter[];
+  /** 悪い風向(オンショア側) */
+  badWind: DirLetter[];
+  /** 良いうねり方向 */
+  goodSwell: DirLetter[];
+  /** なじみサイズの下限(m) */
+  waveMin: number;
+  /** なじみサイズの上限(m) */
+  waveMax: number;
   level: Level;
   bottom: Bottom;
 }
@@ -63,7 +80,7 @@ export interface Evaluation {
 /** 取得した現在地 */
 export interface UserLocation {
   lat: number;
-  lng: number;
+  lon: number;
   accuracy: number; // m
   ts: number;
 }

@@ -81,8 +81,8 @@ export function HomeScreen({ ranked, status, stale, lastFetched, refreshing, onR
         </svg>
         <div className="flex items-start justify-between relative">
           <div>
-            <p className="text-[10px] tracking-[0.25em] text-foam-200/80 font-display font-bold">SHIKOKU SURF NAVI</p>
-            <h1 className="text-[26px] leading-tight font-black mt-1">四国サーフナビ</h1>
+            <p className="text-[10px] tracking-[0.25em] text-foam-200/80 font-display font-bold">SURF POINT NAVI</p>
+            <h1 className="text-[26px] leading-tight font-black mt-1">サーフポイントナビ</h1>
           </div>
           <button onClick={onRefresh} aria-label="予報を更新" className="p-2.5 rounded-full bg-white/10 active:bg-white/25">
             <IconRefresh className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />

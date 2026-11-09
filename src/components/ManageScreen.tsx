@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { SurfPoint } from '../types.ts';
-import { DEFAULT_POINTS } from '../lib/defaultPoints.ts';
-import { bottomLabel, dir16, levelLabel, sizeRangeLabel } from '../lib/format.ts';
+import { loadRegionData, regionLabel } from '../data/index.ts';
+import { bottomLabel, letterJP, levelLabel, sizeRangeLabel } from '../lib/format.ts';
 import { PointForm } from './PointForm.tsx';
 import { IconPlus, IconTrash } from './icons.tsx';
 
@@ -33,8 +33,8 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
   };
 
   const reset = () => {
-    if (window.confirm('全ポイントを初期状態に戻します。よろしいですか?')) {
-      onSaveAll(structuredClone(DEFAULT_POINTS));
+    if (window.confirm('全ポイントを地方JSONの初期状態に戻します。よろしいですか?')) {
+      onSaveAll(loadRegionData());
     }
   };
 
@@ -44,7 +44,7 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
         <p className="text-[10px] tracking-[0.25em] text-foam-200/80 font-display font-bold">MY POINTS</p>
         <h1 className="text-2xl font-black mt-1">ポイント管理</h1>
         <p className="text-xs text-foam-200/90 mt-2 leading-relaxed">
-          位置・向き・なじみサイズを設定すると、スコアと評価コメントが変わります。
+          良い風向・うねり方角・なじみサイズを設定すると、スコアと評価コメントが変わります。
         </p>
       </header>
 
@@ -52,12 +52,17 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
         {points.map((p) => (
           <div key={p.id} className="bg-white rounded-2xl border border-sand-300/60 shadow-sm p-4 flex items-center gap-2">
             <button className="flex-1 min-w-0 text-left" onClick={() => setEditing(p)}>
-              <div className="font-bold text-ocean-950 truncate">{p.name}</div>
-              <div className="text-[11px] text-neutral-400 font-mono mt-0.5">
-                {p.lat.toFixed(4)}, {p.lng.toFixed(4)}
+              <div className="font-bold text-ocean-950 truncate">
+                {p.name}
+                <span className="ml-2 text-[10px] font-normal text-neutral-400">{regionLabel(p.region)}</span>
               </div>
-              <div className="text-[11px] text-neutral-500 mt-1">
-                向き {dir16(p.bearing)}・なじみ {sizeRangeLabel(p.sizeMin, p.sizeMax)}・{levelLabel(p.level)}・{bottomLabel(p.bottom)}
+              <div className="text-[11px] text-neutral-400 font-mono mt-0.5">
+                {p.lat.toFixed(4)}, {p.lon.toFixed(4)}
+              </div>
+              <div className="text-[11px] text-neutral-500 mt-1 leading-relaxed">
+                {[p.prefecture, `良い風 ${p.goodWind.length ? p.goodWind.map(letterJP).join('/') : '—'}`, `なじみ ${sizeRangeLabel(p.waveMin, p.waveMax)}`, levelLabel(p.level), bottomLabel(p.bottom)]
+                  .filter(Boolean)
+                  .join('・')}
               </div>
             </button>
             <button
@@ -82,7 +87,7 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
 
         <div className="pt-1">
           <button onClick={reset} className="text-xs text-neutral-400 underline">
-            初期ポイントに戻す
+            地方JSONの初期データに戻す
           </button>
         </div>
 

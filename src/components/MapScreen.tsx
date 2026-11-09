@@ -46,8 +46,8 @@ function userIcon(): L.DivIcon {
 function Fit({ ranked, location }: { ranked: Ranked[]; location: UserLocation | null }) {
   const map = useMap();
   useEffect(() => {
-    const pts: L.LatLngTuple[] = ranked.map((r) => [r.point.lat, r.point.lng]);
-    if (location) pts.push([location.lat, location.lng]);
+    const pts: L.LatLngTuple[] = ranked.map((r) => [r.point.lat, r.point.lon]);
+    if (location) pts.push([location.lat, location.lon]);
     if (pts.length === 0) return;
     if (pts.length === 1) {
       map.setView(pts[0], location ? 12 : 10);
@@ -74,7 +74,7 @@ export function MapScreen({ ranked, location, geoStatus, onLocate, onOpen }: {
   onOpen: (id: string) => void;
 }) {
   const [map, setMap] = useState<L.Map | null>(null);
-  const center: L.LatLngTuple = location ? [location.lat, location.lng] : SHIKOKU_CENTER;
+  const center: L.LatLngTuple = location ? [location.lat, location.lon] : SHIKOKU_CENTER;
 
   return (
     <div className="relative z-0 h-dvh w-full overflow-hidden bg-[#dfe7ec]">
@@ -88,11 +88,11 @@ export function MapScreen({ ranked, location, geoStatus, onLocate, onOpen }: {
         {location && (
           <>
             <Circle
-              center={[location.lat, location.lng]}
+              center={[location.lat, location.lon]}
               radius={Math.max(50, Math.min(location.accuracy || 100, 2000))}
               pathOptions={{ color: '#2563eb', weight: 1, fillColor: '#2563eb', fillOpacity: 0.08 }}
             />
-            <Marker position={[location.lat, location.lng]} icon={userIcon()}>
+            <Marker position={[location.lat, location.lon]} icon={userIcon()}>
               <Tooltip direction="top" offset={[0, -14]}>
                 現在地
               </Tooltip>
@@ -103,7 +103,7 @@ export function MapScreen({ ranked, location, geoStatus, onLocate, onOpen }: {
         {ranked.map((r) => (
           <Marker
             key={r.point.id}
-            position={[r.point.lat, r.point.lng]}
+            position={[r.point.lat, r.point.lon]}
             icon={pointIcon(r.ev?.score ?? null)}
             eventHandlers={{ click: () => onOpen(r.point.id) }}
           >
@@ -160,7 +160,7 @@ export function MapScreen({ ranked, location, geoStatus, onLocate, onOpen }: {
       <button
         onClick={() => {
           onLocate();
-          if (location && map) map.flyTo([location.lat, location.lng], Math.max(map.getZoom(), 12), { duration: 0.6 });
+          if (location && map) map.flyTo([location.lat, location.lon], Math.max(map.getZoom(), 12), { duration: 0.6 });
         }}
         aria-label="現在地を取得して移動"
         className="absolute right-3 bottom-[calc(env(safe-area-inset-bottom,0px)+124px)] z-[1000] w-12 h-12 rounded-full bg-white shadow-lg border border-sand-300 flex items-center justify-center text-ocean-800 active:bg-sand-100"

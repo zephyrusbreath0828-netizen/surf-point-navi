@@ -1,6 +1,6 @@
 import type { PointData, SurfPoint } from '../types.ts';
 import { evaluatePoint, currentForecast, bestHourIdx } from '../lib/score.ts';
-import { WIND_TAG_LABEL, bottomLabel, dir16, fmtHM, levelLabel, sizeLabel, sizeRangeLabel } from '../lib/format.ts';
+import { WIND_TAG_LABEL, bottomLabel, dir16, fmtHM, levelLabel, offshoreDir, sizeLabel, sizeRangeLabel } from '../lib/format.ts';
 import { fmtKm } from '../lib/distance.ts';
 import { StarRating } from './StarRating.tsx';
 import { ScoreRing } from './ScoreRing.tsx';
@@ -32,7 +32,7 @@ export function DetailScreen({ point, pd, dist, onBack, onEdit }: {
   const ev = f ? evaluatePoint(point, f) : null;
   const best = pd ? bestHourIdx(pd, point) : null;
   const bestHour = pd && best != null ? parseInt(pd.series.time[best].slice(11, 13), 10) : null;
-  const offDir = (point.bearing + 180) % 360;
+  const offDir = offshoreDir(point);
 
   return (
     <div className="pb-24">
@@ -43,12 +43,13 @@ export function DetailScreen({ point, pd, dist, onBack, onEdit }: {
         <div className="text-center">
           <h1 className="text-2xl font-black">{point.name}</h1>
           <p className="text-[11px] text-foam-200/90 mt-1 font-mono">
-            {point.lat.toFixed(4)}, {point.lng.toFixed(4)}
+            {point.lat.toFixed(4)}, {point.lon.toFixed(4)}
           </p>
         </div>
         <div className="mt-3 flex flex-wrap justify-center gap-1.5 text-[11px]">
-          <span className="px-2 py-0.5 rounded-full bg-white/10">向き {dir16(point.bearing)}</span>
-          <span className="px-2 py-0.5 rounded-full bg-white/10">なじみ {sizeRangeLabel(point.sizeMin, point.sizeMax)}</span>
+          {point.prefecture && <span className="px-2 py-0.5 rounded-full bg-white/10">{point.prefecture}</span>}
+          {offDir != null && <span className="px-2 py-0.5 rounded-full bg-white/10">オフショア {dir16(offDir)}風</span>}
+          <span className="px-2 py-0.5 rounded-full bg-white/10">なじみ {sizeRangeLabel(point.waveMin, point.waveMax)}</span>
           <span className="px-2 py-0.5 rounded-full bg-white/10">{levelLabel(point.level)}</span>
           <span className="px-2 py-0.5 rounded-full bg-white/10">{bottomLabel(point.bottom)}</span>
           {dist != null && <span className="px-2 py-0.5 rounded-full bg-white/10">現在地から {fmtKm(dist)}</span>}

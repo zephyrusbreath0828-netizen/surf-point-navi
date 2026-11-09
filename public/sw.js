@@ -1,4 +1,4 @@
-// 四国サーフナビ Service Worker
+// サーフポイントナビ Service Worker
 // - アプリシェル(ページ/アセット)はキャッシュしてオフライン起動を可能にする
 // - Open-Meteo API へのリクエストはキャッシュしない(予報は localStorage に最新値を保存し、オフライン時はそれを表示)
 const CACHE = 'ssn-cache-v1';

@@ -1,10 +1,11 @@
-// 実API→スコア→ランキングの一連の動作確認(node --experimental-strip-types)
+// 実API→地方JSON→スコア→ランキングの一連の動作確認(node --experimental-strip-types)
 import { fetchPointData } from '../src/lib/openmeteo.ts';
 import { evaluatePoint, currentForecast, bestHourIdx } from '../src/lib/score.ts';
-import { DEFAULT_POINTS } from '../src/lib/defaultPoints.ts';
+import { loadPointsForCheck } from './load-points.ts';
 
-const data = await fetchPointData(DEFAULT_POINTS);
-const ranked = DEFAULT_POINTS.map((p) => {
+const POINTS = loadPointsForCheck();
+const data = await fetchPointData(POINTS);
+const ranked = POINTS.map((p) => {
   const pd = data[p.id];
   const f = pd ? currentForecast(pd) : null;
   const ev = f ? evaluatePoint(p, f) : null;

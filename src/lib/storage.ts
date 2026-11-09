@@ -1,60 +1,25 @@
 import type { Bottom, Level, PointData, SurfPoint, UserLocation } from '../types.ts';
-import { DEFAULT_POINTS } from './defaultPoints.ts';
+import { loadRegionData } from '../data/index.ts';
+import { normalizePoint } from './normalize.ts';
 
-const POINTS_KEY = 'ssn.points.v1';
+const POINTS_KEY = 'ssn.points.v2'; // v2: 地方JSONスキーマ(goodWind/badWind/goodSwell/waveMin/waveMax)
 const CACHE_KEY = 'ssn.cache.v1';
 const LOC_KEY = 'ssn.loc.v1';
-
-function clamp(v: number, lo: number, hi: number): number {
-  return Math.max(lo, Math.min(hi, v));
-}
-
-function normalize(raw: unknown): SurfPoint | null {
-  if (!raw || typeof raw !== 'object') return null;
-  const p = raw as Record<string, unknown>;
-  const lat = Number(p.lat);
-  const lng = Number(p.lng);
-  if (!Number.isFinite(lat) || lat < -90 || lat > 90) return null;
-  if (!Number.isFinite(lng) || lng < -180 || lng > 180) return null;
-  let sizeMin = clamp(Number(p.sizeMin) || 0.6, 0.2, 3);
-  let sizeMax = clamp(Number(p.sizeMax) || 1.4, 0.3, 5);
-  if (sizeMin > sizeMax) [sizeMin, sizeMax] = [sizeMax, sizeMin];
-  const id = typeof p.id === 'string' && p.id ? p.id : genId();
-  return {
-    id,
-    name: String(p.name ?? '無名ポイント').slice(0, 30),
-    lat,
-    lng,
-    bearing: (((Number(p.bearing) || 0) % 360) + 360) % 360,
-    sizeMin,
-    sizeMax,
-    level: (p.level === 'intermediate' ? 'intermediate' : 'beginner') as Level,
-    bottom: (p.bottom === 'reef' || p.bottom === 'mix' ? p.bottom : 'sand') as Bottom,
-  };
-}
-
-export function genId(): string {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
-    try {
-      return crypto.randomUUID();
-    } catch {
-      /* fallthrough */
-    }
-  }
-  return `p${Date.now()}${Math.random().toString(36).slice(2, 8)}`;
-}
 
 export function loadPoints(): SurfPoint[] {
   try {
     const raw = localStorage.getItem(POINTS_KEY);
-    if (!raw) return structuredClone(DEFAULT_POINTS);
-    const arr = JSON.parse(raw);
-    if (!Array.isArray(arr) || arr.length === 0) return structuredClone(DEFAULT_POINTS);
-    const pts = arr.map(normalize).filter((x): x is SurfPoint => x != null);
-    return pts.length > 0 ? pts : structuredClone(DEFAULT_POINTS);
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length > 0) {
+        const pts = arr.map((x) => normalizePoint(x)).filter((x): x is SurfPoint => x != null);
+        if (pts.length > 0) return pts;
+      }
+    }
   } catch {
-    return structuredClone(DEFAULT_POINTS);
+    /* 壊れていれば地方JSONの初期値へ */
   }
+  return loadRegionData();
 }
 
 export function savePoints(points: SurfPoint[]): void {
@@ -100,8 +65,10 @@ export function loadLocation(): UserLocation | null {
     const raw = localStorage.getItem(LOC_KEY);
     if (!raw) return null;
     const j = JSON.parse(raw);
-    if (typeof j?.lat === 'number' && typeof j?.lng === 'number') {
-      return { lat: j.lat, lng: j.lng, accuracy: Number(j.accuracy) || 0, ts: Number(j.ts) || Date.now() };
+    const lat = Number(j?.lat);
+    const lon = Number(j?.lon ?? j?.lng); // 旧形式も読み替え
+    if (Number.isFinite(lat) && Number.isFinite(lon)) {
+      return { lat, lon, accuracy: Number(j.accuracy) || 0, ts: Number(j.ts) || Date.now() };
     }
     return null;
   } catch {

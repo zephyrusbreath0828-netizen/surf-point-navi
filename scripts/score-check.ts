@@ -1,7 +1,12 @@
 // スコアリングの動作確認(node --experimental-strip-types scripts/score-check.ts)
 import { evaluatePoint, bestHourIdx, forecastAt } from '../src/lib/score.ts';
-import { DEFAULT_POINTS } from '../src/lib/defaultPoints.ts';
+import { loadPointsForCheck } from './load-points.ts';
+import { letterToDeg } from '../src/lib/format.ts';
 import type { Forecast, PointData, SurfPoint } from '../src/lib/types.ts';
+
+const POINTS = loadPointsForCheck();
+const ikumi = POINTS.find((p) => p.id === 'ikumi')!;
+const irino = POINTS.find((p) => p.id === 'irino')!;
 
 const base = {
   time: '2026-11-09T08:00',
@@ -19,58 +24,69 @@ function show(title: string, p: SurfPoint, f: Forecast) {
   e?.reasons.forEach((r) => console.log('  -', r));
 }
 
-const ikumi = DEFAULT_POINTS[0];
-
-show('パーフェクト(オフショア+直接入りのうねり)', ikumi, {
+show('パーフェクト(良い風+直接入りのうねり)', ikumi, {
   ...base,
-  windDir: (ikumi.bearing + 180) % 360,
+  windDir: letterToDeg(ikumi.goodWind[0])!,
   windSpeed: 5,
   waveHeight: 1.1,
-  waveDir: ikumi.bearing,
+  waveDir: letterToDeg(ikumi.goodSwell[0])!,
   wavePeriod: 11,
 });
-show('強オンショア+小さめ', ikumi, {
+show('最悪(嫌いな風+逆うねり+小さめ)', ikumi, {
   ...base,
-  windDir: ikumi.bearing,
+  windDir: letterToDeg(ikumi.badWind[0])!,
   windSpeed: 10,
   waveHeight: 0.3,
-  waveDir: (ikumi.bearing + 180) % 360,
+  waveDir: letterToDeg(ikumi.badWind[0])!,
   wavePeriod: 5,
 });
-show('無風+フラット', ikumi, { ...base, windSpeed: 1, waveHeight: 0.15, waveDir: ikumi.bearing, wavePeriod: 7 });
-show('サイド風+なじみサイズ', ikumi, {
+show('無風+フラット', ikumi, {
   ...base,
-  windDir: (ikumi.bearing + 180 + 70) % 360,
+  windSpeed: 1,
+  waveHeight: 0.15,
+  waveDir: letterToDeg(ikumi.goodSwell[0])!,
+  wavePeriod: 7,
+});
+show('風中間+なじみサイズ+隣接うねり', ikumi, {
+  ...base,
+  windDir: letterToDeg('E')!,
   windSpeed: 6,
   waveHeight: 1.2,
-  waveDir: (ikumi.bearing + 40) % 360,
+  waveDir: letterToDeg('S')!,
   wavePeriod: 9,
 });
-show('大きすぎ(初心者ポイント)', DEFAULT_POINTS[3], {
+show('大きすぎ(初心者ポイント)', irino, {
   ...base,
-  windDir: (DEFAULT_POINTS[3].bearing + 180) % 360,
+  windDir: letterToDeg(irino.goodWind[0])!,
   windSpeed: 4,
-  waveHeight: 2.4,
-  waveDir: DEFAULT_POINTS[3].bearing,
+  waveHeight: 3.2,
+  waveDir: letterToDeg(irino.goodSwell[0])!,
   wavePeriod: 12,
 });
-show('うねりデータなし', ikumi, { ...base, windDir: (ikumi.bearing + 180) % 360, windSpeed: 5, waveHeight: null, waveDir: null, wavePeriod: null });
+show('うねりデータなし', ikumi, {
+  ...base,
+  windDir: letterToDeg(ikumi.goodWind[0])!,
+  windSpeed: 5,
+  waveHeight: null,
+  waveDir: null,
+  wavePeriod: null,
+});
 
-// ベストタイムの健全性: 朝オンショア→昼にオフショアへ変わる日にち
+// ベストタイムの健全性: 朝は嫌いな風→昼だけ良い風に変わる日
 const pd: PointData = {
   curIdx: 8,
   fetchedAt: 0,
   series: {
     time: Array.from({ length: 48 }, (_, h) => `2026-11-09T${String(h).padStart(2, '0')}:00`),
-    windDir: Array(48).fill(ikumi.bearing), // 朝: オンショア
+    windDir: Array(48).fill(letterToDeg(ikumi.badWind[0])), // 朝: 悪い風
     windSpeed: Array(48).fill(6),
     temp: Array(48).fill(20),
     waveHeight: Array(48).fill(1.0),
-    waveDir: Array(48).fill(ikumi.bearing),
+    waveDir: Array(48).fill(letterToDeg(ikumi.goodSwell[0])),
     wavePeriod: Array(48).fill(8),
   },
 };
-for (let h = 12; h <= 15; h++) pd.series.windDir[h] = (ikumi.bearing + 180) % 360; // 昼だけオフショア
+for (let h = 12; h <= 15; h++) pd.series.windDir[h] = letterToDeg(ikumi.goodWind[0])!; // 昼だけ良い風
 const bi = bestHourIdx(pd, ikumi);
 console.log('bestHour =', bi != null ? pd.series.time[bi] : null, '(12〜15時のいずれかであるべき)');
 console.log('08時の評価 =', evaluatePoint(ikumi, forecastAt(pd, 8))?.score, '(低いはず)');

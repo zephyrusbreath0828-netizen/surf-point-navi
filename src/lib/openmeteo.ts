@@ -12,8 +12,8 @@ async function getJson(url: string): Promise<any> {
 }
 
 /** 海洋API(うねり)。cell_selection=sea で海岸に近い海側セルを掴む。失敗したらパラメータなしで再試行 */
-async function getMarine(lat: string, lng: string): Promise<any | null> {
-  const base = `${MARINE_URL}?latitude=${lat}&longitude=${lng}&hourly=wave_height,wave_direction,wave_period&timezone=Asia%2FTokyo&forecast_days=2`;
+async function getMarine(lat: string, lon: string): Promise<any | null> {
+  const base = `${MARINE_URL}?latitude=${lat}&longitude=${lon}&hourly=wave_height,wave_direction,wave_period&timezone=Asia%2FTokyo&forecast_days=2`;
   try {
     return await getJson(`${base}&cell_selection=sea`);
   } catch {
@@ -53,10 +53,10 @@ function curIndex(times: string[]): number {
 export async function fetchPointData(points: SurfPoint[]): Promise<Record<string, PointData>> {
   if (points.length === 0) return {};
   const lat = points.map((p) => p.lat.toFixed(4)).join(',');
-  const lng = points.map((p) => p.lng.toFixed(4)).join(',');
+  const lon = points.map((p) => p.lon.toFixed(4)).join(',');
 
-  const wUrl = `${FORECAST_URL}?latitude=${lat}&longitude=${lng}&hourly=temperature_2m,wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&timezone=Asia%2FTokyo&forecast_days=2`;
-  const [wRaw, mRaw] = await Promise.all([getJson(wUrl), getMarine(lat, lng)]);
+  const wUrl = `${FORECAST_URL}?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&timezone=Asia%2FTokyo&forecast_days=2`;
+  const [wRaw, mRaw] = await Promise.all([getJson(wUrl), getMarine(lat, lon)]);
 
   const wArr: any[] = Array.isArray(wRaw) ? wRaw : [wRaw];
   const mArr: any[] = mRaw == null ? [] : Array.isArray(mRaw) ? mRaw : [mRaw];

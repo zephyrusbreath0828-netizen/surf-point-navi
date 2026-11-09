@@ -1,41 +1,74 @@
-import type { Evaluation, Forecast, PointData, SurfPoint, WindTag } from '../types.ts';
-import { angDiff, dir16, sizeLabel } from './format.ts';
+import type { Evaluation, Forecast, PointData, SurfPoint, WindTag, DirLetter } from '../types.ts';
+import { LETTERS16, degToLetter, dir16, sizeLabel } from './format.ts';
 
 export type { Evaluation };
 
-/** 風の評価(最大40点): オフショアほど高く、オンショア&強風ほど低い */
+/** 風速による増幅(弱風は影響小・強風は増幅) */
+function windStrength(ws: number): number {
+  return Math.min(1.15, 0.75 + ws / 20);
+}
+
+/** letter が方向リストに「含まれるか / 1ステップ隣(22.5°)か」を判定 */
+function relate(letter: DirLetter, list: DirLetter[]): { main: boolean; adj: boolean } {
+  if (list.length === 0) return { main: false, adj: false };
+  const i = LETTERS16.indexOf(letter);
+  if (i < 0) return { main: false, adj: false };
+  const adj = list.some((l) => {
+    const j = LETTERS16.indexOf(l);
+    if (j < 0) return false;
+    const d = Math.abs(i - j);
+    return d === 1 || d === 15;
+  });
+  return { main: list.includes(letter), adj };
+}
+
+/** 風の評価(最大40点): goodWind に近いほど高く、badWind&強風ほど低い */
 function windEval(p: SurfPoint, f: Forecast): { pts: number; tag: WindTag; reasons: string[] } {
-  const offDir = (p.bearing + 180) % 360; // この風向がオフショアになる
-  const d = angDiff(f.windDir, offDir);
   const ws = f.windSpeed;
-  const dName = dir16(f.windDir);
+  const letter = degToLetter(f.windDir);
+  const name = dir16(f.windDir);
 
   if (ws < 3) {
-    const pts = 32 + (3 - ws) * 1.7; // 32〜37.1
+    const pts = Math.min(40, 32 + (3 - ws) * 1.7); // 32〜37.1
     return { pts, tag: 'calm', reasons: [`風が弱く(${ws.toFixed(1)}m/s)、面への影響は少なそう`] };
   }
 
-  let factor: number;
-  let tag: WindTag;
-  const reasons: string[] = [];
-  if (d <= 25) {
-    factor = 1.0; tag = 'off';
-    reasons.push(`${dName}風のオフショア。面が整いやすい`);
-  } else if (d <= 55) {
-    factor = 0.8; tag = 'side-off';
-    reasons.push(`${dName}風。ややサイド寄りだが面はそこそこ保てそう`);
-  } else if (d <= 100) {
-    factor = 0.48; tag = 'side';
-    reasons.push(`${dName}風のクロス気味。面は少し荒れそう`);
-  } else if (d <= 140) {
-    factor = 0.2; tag = 'side-on';
-    reasons.push(`${dName}風のオンショア気味。面はざわつきそう`);
-  } else {
-    factor = 0.06; tag = 'on';
-    reasons.push(`${dName}風のオンショア${ws >= 8 ? 'が強め' : ''}。面は期待薄`);
+  const good = relate(letter, p.goodWind);
+  const bad = relate(letter, p.badWind);
+
+  if (good.main) {
+    return {
+      pts: Math.min(40, 40 * windStrength(ws)),
+      tag: 'off',
+      reasons: [`${name}風(${letter})はこのポイントの良い風向。面が整いやすい`],
+    };
   }
-  const strength = Math.min(1.15, 0.75 + ws / 20); // 弱い風は影響小、強風は増幅
-  return { pts: Math.min(40, 40 * factor * strength), tag, reasons };
+  if (bad.main) {
+    return {
+      pts: 40 * 0.08 * windStrength(ws),
+      tag: 'on',
+      reasons: [`${name}風(${letter})はこのポイントが嫌う風向。面は期待薄`],
+    };
+  }
+  if (good.adj) {
+    return {
+      pts: 40 * 0.75 * windStrength(ws),
+      tag: 'side-off',
+      reasons: [`${name}風は良い風向に近く、面はそこそこ保てそう`],
+    };
+  }
+  if (bad.adj) {
+    return {
+      pts: 40 * 0.28 * windStrength(ws),
+      tag: 'side-on',
+      reasons: [`${name}風は悪い風向に近く、面はざわつきそう`],
+    };
+  }
+  return {
+    pts: 40 * 0.5 * windStrength(ws),
+    tag: 'side',
+    reasons: [`${name}風。良い風でも嫌いな風でもないので、面はほどほど`],
+  };
 }
 
 /** うねり・サイズの評価(最大45点): 入射角×なじみサイズ×周期 */
@@ -43,27 +76,22 @@ function swellEval(p: SurfPoint, f: Forecast): { pts: number; reasons: string[] 
   const reasons: string[] = [];
   const h = f.waveHeight;
   const per = f.wavePeriod;
+  const letter = f.waveDir == null ? null : degToLetter(f.waveDir);
   const dName = f.waveDir == null ? '—' : dir16(f.waveDir);
 
   let dirF: number;
-  if (f.waveDir == null) {
+  if (letter == null) {
     dirF = 0.5;
     reasons.push('うねりの向きはデータなし(推計で判定)');
+  } else if (p.goodSwell.includes(letter)) {
+    dirF = 1.0;
+    reasons.push(`${dName}うねりがまっすぐ入る向き`);
+  } else if (relate(letter, p.goodSwell).adj) {
+    dirF = 0.65;
+    reasons.push(`${dName}うねり。やや斜めだがしっかり入る`);
   } else {
-    const s = angDiff(f.waveDir, p.bearing);
-    if (s <= 30) {
-      dirF = 1.0;
-      reasons.push(`${dName}うねりがまっすぐ入る向き`);
-    } else if (s <= 60) {
-      dirF = 0.78;
-      reasons.push(`${dName}うねり。やや斜めだがしっかり入る`);
-    } else if (s <= 90) {
-      dirF = 0.48;
-      reasons.push(`${dName}のうねりは斜め入り。地形で差が出そう`);
-    } else {
-      dirF = 0.15;
-      reasons.push(`${dName}うねりはポイント向きと合わず、入りは薄そう`);
-    }
+    dirF = 0.3;
+    reasons.push(`${dName}うねりはこのポイント向きの入射ではなく、入りは薄そう`);
   }
 
   let sizeF: number;
@@ -73,13 +101,13 @@ function swellEval(p: SurfPoint, f: Forecast): { pts: number; reasons: string[] 
   } else if (h < 0.2) {
     sizeF = 0.05;
     reasons.push('サイズはフラット気味。うねりが入ってこないと厳しそう');
-  } else if (h < p.sizeMin) {
-    sizeF = Math.max(0.15, Math.pow(h / p.sizeMin, 1.3));
-    reasons.push(`サイズは${sizeLabel(h)}程度。${sizeLabel(p.sizeMin)}〜${sizeLabel(p.sizeMax)}より小さめ`);
-  } else if (h > p.sizeMax) {
-    const over = (h - p.sizeMax) / p.sizeMax;
+  } else if (h < p.waveMin) {
+    sizeF = Math.max(0.15, Math.pow(h / p.waveMin, 1.3));
+    reasons.push(`サイズは${sizeLabel(h)}程度。${sizeLabel(p.waveMin)}〜${sizeLabel(p.waveMax)}より小さめ`);
+  } else if (h > p.waveMax) {
+    const over = (h - p.waveMax) / p.waveMax;
     sizeF = Math.max(0.15, 1 - over * 1.1);
-    if (p.level === 'beginner' && h > p.sizeMax + 0.6) {
+    if (p.level === 'beginner' && h > p.waveMax + 0.6) {
       sizeF *= 0.7;
       reasons.push(`サイズは${sizeLabel(h)}と大きめ。初心者には厳しいかも`);
     } else {
@@ -87,9 +115,9 @@ function swellEval(p: SurfPoint, f: Forecast): { pts: number; reasons: string[] 
     }
   } else {
     sizeF = 1.0;
-    const span = p.sizeMax - p.sizeMin;
-    if (h < p.sizeMin + span * 0.25) reasons.push(`サイズは${sizeLabel(h)}前後。なじみサイズの下寄り`);
-    else if (h > p.sizeMax - span * 0.25) reasons.push(`サイズは${sizeLabel(h)}前後。なじみサイズの上寄り`);
+    const span = p.waveMax - p.waveMin;
+    if (h < p.waveMin + span * 0.25) reasons.push(`サイズは${sizeLabel(h)}前後。なじみサイズの下寄り`);
+    else if (h > p.waveMax - span * 0.25) reasons.push(`サイズは${sizeLabel(h)}前後。なじみサイズの上寄り`);
     else reasons.push(`サイズは${sizeLabel(h)}前後。なじみサイズど真ん中`);
   }
 
@@ -109,7 +137,7 @@ function swellEval(p: SurfPoint, f: Forecast): { pts: number; reasons: string[] 
   }
 
   const base = 0.5 * dirF + 0.35 * sizeF + 0.15 * perF;
-  const directHit = f.waveDir != null && angDiff(f.waveDir, p.bearing) <= 30 && (per ?? 0) >= 9;
+  const directHit = letter != null && p.goodSwell.includes(letter) && (per ?? 0) >= 9;
   return { pts: 45 * base * (directHit ? 1.05 : 1), reasons };
 }
 
@@ -128,9 +156,9 @@ export function evaluatePoint(p: SurfPoint, f?: Forecast | null): Evaluation | n
   const sw = swellEval(p, f);
   let score = Math.round(w.pts + sw.pts);
 
-  // 安全用の上限ガード: フラットは高評価にしない / 倍以上はクローズアウト気味
+  // 安全用の上限ガード: フラットは高評価にしない / なじみサイズの倍以上はクローズアウト気味
   if (f.waveHeight != null && f.waveHeight < 0.25) score = Math.min(score, 42);
-  if (f.waveHeight != null && f.waveHeight > p.sizeMax * 2) score = Math.min(score, 48);
+  if (f.waveHeight != null && f.waveHeight > p.waveMax * 2) score = Math.min(score, 48);
 
   score = Math.max(0, Math.min(100, score));
   const [stars, label] = grade(score);

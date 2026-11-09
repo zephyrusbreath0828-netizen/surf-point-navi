@@ -6,8 +6,8 @@ export type GeoStatus = 'idle' | 'loading' | 'ok' | 'error';
 
 /**
  * 現在地取得(Geolocation API)。
- - マウント時に1回自動取得、失敗時は呼び出し側がフォールバック(四国中央)を使う
- - 取得済みの最終位置は localStorage に保存し、次回起動すぐに距離表示へ使う
+ * マウント時に1回自動取得、失敗時は呼び出し側がフォールバック(四国中央)を使う。
+ * 取得済みの最終位置は localStorage に保存し、次回起動すぐに距離表示へ使う。
  */
 export function useGeolocation() {
   const [loc, setLoc] = useState<UserLocation | null>(loadLocation);
@@ -23,7 +23,7 @@ export function useGeolocation() {
       (pos) => {
         const l: UserLocation = {
           lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
+          lon: pos.coords.longitude,
           accuracy: pos.coords.accuracy,
           ts: Date.now(),
         };
