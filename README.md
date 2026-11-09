@@ -25,16 +25,17 @@
 
 ```text
 src/data/packs/
-  japan-hokkaido.json   北海道
-  japan-tohoku.json     東北
-  japan-kanto.json      関東
-  japan-chubu.json      中部
-  japan-kinki.json      近畿
-  japan-chugoku.json    中国
-  japan-shikoku.json    四国(生見/内妻/小松/入野/双海)
-  japan-kyushu.json     九州
-  japan-okinawa.json    沖縄
+  japan-hokkaido.json   北海道（14 点）
+  japan-tohoku.json     東北（55 点）
+  japan-kanto.json      関東（71 点）
+  japan-chubu.json      中部（57 点）
+  japan-kinki.json      近畿（13 点）
+  japan-chugoku.json    中国（50 点）
+  japan-shikoku.json    四国（33 点）
+  japan-kyushu.json     九州（44 点）
+  japan-okinawa.json    沖縄（14 点）
 ```
+
 
 JSON 形式(1 ファイル = 1 地方の配列):
 
@@ -126,6 +127,9 @@ node --experimental-strip-types scripts/e2e-check.ts    # 実API+地方JSON+ラ�
 サブパスに置く場合は `vite.config.ts` に `base` を追加し、manifest の `start_url`/`scope` を調整してください。
 
 ## データ・免責
+
+- 収録ポイントは実在する地点名を地名ジオコード（OpenStreetMap / Photon）で確認した緯度経度です。風向・うねりの方向設定（goodWind / badWind / goodSwell）は未設定で出荷されるため、ポイント管理画面から好みで編集してください
+
 
 - 予報は Open-Meteo(気象 API / Marine API)。出典表記 (CC BY 4.0) をアプリ内に含みます
 - 地図タイルは © OpenStreetMap contributors

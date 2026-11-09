@@ -46,12 +46,25 @@ function curIndex(times: string[]): number {
   return last;
 }
 
+/** 1リクエストに詰められる最大地点数(URL長とAPI上限の保険) */
+const CHUNK_SIZE = 40;
+
 /**
- * 複数ポイントの予報を Open-Meteo から取得(気象1回+海洋1回の計2リクエスト)。
+ * 複数ポイントの予報を Open-Meteo から取得。
+ * 250+ 地点に対応するため 40 地点ずつチャンク分割し、気象+海洋をチャンク毎に並列取得。
  * 海洋APIが死んでも風・気温は生かす(うねりは null 扱い)。
  */
 export async function fetchPointData(points: SurfPoint[]): Promise<Record<string, PointData>> {
   if (points.length === 0) return {};
+  const chunks: SurfPoint[][] = [];
+  for (let i = 0; i < points.length; i += CHUNK_SIZE) {
+    chunks.push(points.slice(i, i + CHUNK_SIZE));
+  }
+  const parts = await Promise.all(chunks.map((c) => fetchChunk(c)));
+  return Object.assign({}, ...parts);
+}
+
+async function fetchChunk(points: SurfPoint[]): Promise<Record<string, PointData>> {
   const lat = points.map((p) => p.lat.toFixed(4)).join(',');
   const lon = points.map((p) => p.lon.toFixed(4)).join(',');
 

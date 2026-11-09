@@ -1,13 +1,358 @@
 [
   {
+    "id": "jp-shikoku-001",
+    "name": "大手海岸",
+    "prefecture": "徳島県",
+    "lat": 33.734173,
+    "lon": 134.541363,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-002",
+    "name": "鳴門",
+    "prefecture": "徳島県",
+    "lat": 34.178897,
+    "lon": 134.608418,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-003",
+    "name": "鳴門里浦",
+    "prefecture": "徳島県",
+    "lat": 34.173887,
+    "lon": 134.624464,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-004",
+    "name": "月見ヶ丘海浜公園",
+    "prefecture": "徳島県",
+    "lat": 34.125992,
+    "lon": 134.609762,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-005",
+    "name": "吉野川河口",
+    "prefecture": "徳島県",
+    "lat": 34.040288,
+    "lon": 134.004351,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-006",
+    "name": "北の脇",
+    "prefecture": "徳島県",
+    "lat": 33.89766,
+    "lon": 134.68548,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-007",
+    "name": "蒲生野岬",
+    "prefecture": "徳島県",
+    "lat": 33.834305,
+    "lon": 134.750023,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-008",
+    "name": "田井ノ浜",
+    "prefecture": "徳島県",
+    "lat": 33.772771,
+    "lon": 134.583838,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-009",
+    "name": "宍喰",
+    "prefecture": "徳島県",
+    "lat": 33.566853,
+    "lon": 134.300717,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-010",
+    "name": "竹ヶ島",
+    "prefecture": "徳島県",
+    "lat": 33.544361,
+    "lon": 134.319157,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-011",
+    "name": "尾崎",
+    "prefecture": "徳島県",
+    "lat": 33.565643,
+    "lon": 134.279301,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-012",
+    "name": "椎名",
+    "prefecture": "高知県",
+    "lat": 33.320776,
+    "lon": 134.193883,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-013",
+    "name": "吉良",
+    "prefecture": "高知県",
+    "lat": 33.516896,
+    "lon": 133.451783,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-014",
+    "name": "安田",
+    "prefecture": "高知県",
+    "lat": 33.443386,
+    "lon": 133.984127,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-015",
+    "name": "奈半利川河口",
+    "prefecture": "高知県",
+    "lat": 33.54187,
+    "lon": 134.110346,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-016",
+    "name": "甲殿",
+    "prefecture": "高知県",
+    "lat": 33.473008,
+    "lon": 133.508978,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-017",
+    "name": "手結",
+    "prefecture": "高知県",
+    "lat": 33.528417,
+    "lon": 133.75642,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-018",
+    "name": "久礼大野",
+    "prefecture": "高知県",
+    "lat": 33.615723,
+    "lon": 133.569041,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-019",
+    "name": "仁淀川河口",
+    "prefecture": "高知県",
+    "lat": 33.461854,
+    "lon": 133.482319,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-020",
+    "name": "矢井賀",
+    "prefecture": "高知県",
+    "lat": 33.242303,
+    "lon": 133.234696,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-021",
+    "name": "上ノ加江",
+    "prefecture": "高知県",
+    "lat": 33.282895,
+    "lon": 133.238765,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-022",
+    "name": "伊田",
+    "prefecture": "高知県",
+    "lat": 33.038404,
+    "lon": 133.075794,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-023",
+    "name": "入野松原",
+    "prefecture": "高知県",
+    "lat": 33.030493,
+    "lon": 133.023113,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-024",
+    "name": "出口",
+    "prefecture": "高知県",
+    "lat": 32.986376,
+    "lon": 132.99723,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-025",
+    "name": "平野",
+    "prefecture": "高知県",
+    "lat": 33.546132,
+    "lon": 133.266236,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-026",
+    "name": "大岐の浜",
+    "prefecture": "高知県",
+    "lat": 32.826659,
+    "lon": 132.955241,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-027",
+    "name": "下ノ加江",
+    "prefecture": "高知県",
+    "lat": 32.883493,
+    "lon": 132.944167,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
+    "id": "jp-shikoku-028",
+    "name": "川之浜",
+    "prefecture": "愛媛県",
+    "lat": 33.431108,
+    "lon": 132.226295,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.6,
+    "waveMax": 2.0
+  },
+  {
     "id": "ikumi",
     "name": "生見海岸",
     "prefecture": "高知県",
     "lat": 33.525,
     "lon": 134.288,
-    "goodWind": ["N", "NW"],
-    "badWind": ["S", "SE"],
-    "goodSwell": ["SE", "E"],
+    "goodWind": [
+      "N",
+      "NW"
+    ],
+    "badWind": [
+      "S",
+      "SE"
+    ],
+    "goodSwell": [
+      "SE",
+      "E"
+    ],
     "waveMin": 0.8,
     "waveMax": 2.5
   },
@@ -17,9 +362,18 @@
     "prefecture": "徳島県",
     "lat": 33.661,
     "lon": 134.3985,
-    "goodWind": ["N", "NW"],
-    "badWind": ["S", "SE"],
-    "goodSwell": ["S", "SE"],
+    "goodWind": [
+      "N",
+      "NW"
+    ],
+    "badWind": [
+      "S",
+      "SE"
+    ],
+    "goodSwell": [
+      "S",
+      "SE"
+    ],
     "waveMin": 0.6,
     "waveMax": 2.0
   },
@@ -29,9 +383,18 @@
     "prefecture": "徳島県",
     "lat": 34.056,
     "lon": 134.607,
-    "goodWind": ["NW", "W"],
-    "badWind": ["E", "SE"],
-    "goodSwell": ["S", "SE"],
+    "goodWind": [
+      "NW",
+      "W"
+    ],
+    "badWind": [
+      "E",
+      "SE"
+    ],
+    "goodSwell": [
+      "S",
+      "SE"
+    ],
     "waveMin": 0.4,
     "waveMax": 1.2
   },
@@ -41,9 +404,18 @@
     "prefecture": "高知県",
     "lat": 33.0211,
     "lon": 133.0163,
-    "goodWind": ["N", "NE"],
-    "badWind": ["S", "SE"],
-    "goodSwell": ["SW", "S"],
+    "goodWind": [
+      "N",
+      "NE"
+    ],
+    "badWind": [
+      "S",
+      "SE"
+    ],
+    "goodSwell": [
+      "SW",
+      "S"
+    ],
     "waveMin": 0.8,
     "waveMax": 2.5
   },
@@ -53,9 +425,18 @@
     "prefecture": "愛媛県",
     "lat": 33.67,
     "lon": 132.63,
-    "goodWind": ["E", "NE"],
-    "badWind": ["W", "NW"],
-    "goodSwell": ["SW", "W"],
+    "goodWind": [
+      "E",
+      "NE"
+    ],
+    "badWind": [
+      "W",
+      "NW"
+    ],
+    "goodSwell": [
+      "SW",
+      "W"
+    ],
     "waveMin": 0.6,
     "waveMax": 2.0
   }
