@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, sans-serif;
+  --font-display: "Outfit", "Noto Sans JP", system-ui, sans-serif;
+
+  /* 深い海〜早朝の海面 */
+  --color-ocean-950: #071c33;
+  --color-ocean-900: #0a2540;
+  --color-ocean-800: #0e3a5e;
+  --color-ocean-700: #14567f;
+
+  /* さざ波のラグーン */
+  --color-lagoon-500: #17a398;
+  --color-lagoon-600: #0e8a81;
+
+  --color-foam-100: #eef7f6;
+  --color-foam-200: #d9eeec;
+
+  /* 朝の砂 */
+  --color-sand-50: #f8f6f1;
+  --color-sand-100: #f2eee5;
+  --color-sand-300: #ded8c9;
+
+  /* 太陽と夕焼け */
+  --color-sun-500: #f5a524;
+  --color-coral-500: #e2603f;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ocean-950);
+  color: var(--color-ocean-950);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ノッチ対応の下部余白 */
+.pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+}
