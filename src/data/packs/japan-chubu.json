@@ -682,5 +682,41 @@
     "goodSwell": [],
     "waveMin": 0.6,
     "waveMax": 2.0
+  },
+  {
+    "id": "jp-chubu-058",
+    "name": "鳥居浜",
+    "prefecture": "福井県",
+    "lat": 35.490407,
+    "lon": 135.556387,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.5,
+    "waveMax": 3.0
+  },
+  {
+    "id": "jp-chubu-059",
+    "name": "和田",
+    "prefecture": "福井県",
+    "lat": 35.49293,
+    "lon": 135.57556,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.5,
+    "waveMax": 3.0
+  },
+  {
+    "id": "jp-chubu-060",
+    "name": "城山",
+    "prefecture": "福井県",
+    "lat": 35.49458,
+    "lon": 135.5529,
+    "goodWind": [],
+    "badWind": [],
+    "goodSwell": [],
+    "waveMin": 0.5,
+    "waveMax": 3.0
   }
 ]

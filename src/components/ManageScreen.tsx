@@ -93,6 +93,10 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
 
         <p className="text-[11px] text-neutral-400 leading-relaxed">
           緯度・経度は海岸付近の値を入れてください(予報は0.05°グリッドの海洋モデルから取得します)。設定はこのブラウザ内にのみ保存されます。
+
+        <p className="text-[11px] text-neutral-400 pt-2">
+          surf-point-navi v1.6.0
+        </p>
         </p>
       </main>
 
