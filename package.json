@@ -1,14 +1,16 @@
 {
   "name": "surf-point-navi",
   "private": true,
-  "version": "1.6.0",
+  "version": "1.7.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
     "build:demo": "vite build --config vite.config.demo.ts",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "bump:minor": "node scripts/bump-version.mjs minor",
+    "bump:patch": "node scripts/bump-version.mjs patch"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

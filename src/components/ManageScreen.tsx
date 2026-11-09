@@ -4,6 +4,7 @@ import { loadAllPoints, packLabel } from '../lib/loadPoints.ts';
 import { bottomLabel, letterJP, levelLabel, sizeRangeLabel } from '../lib/format.ts';
 import { PointForm } from './PointForm.tsx';
 import { IconPlus, IconTrash } from './icons.tsx';
+import { APP_VERSION } from '../lib/version.ts';
 
 export function ManageScreen({ points, onSaveAll, initialEdit }: {
   points: SurfPoint[];
@@ -95,7 +96,7 @@ export function ManageScreen({ points, onSaveAll, initialEdit }: {
           緯度・経度は海岸付近の値を入れてください(予報は0.05°グリッドの海洋モデルから取得します)。設定はこのブラウザ内にのみ保存されます。
 
         <p className="text-[11px] text-neutral-400 pt-2">
-          surf-point-navi v1.6.0
+          surf-point-navi v{APP_VERSION}
         </p>
         </p>
       </main>

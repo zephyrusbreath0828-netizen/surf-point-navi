@@ -5,6 +5,7 @@ import { isSameTokyoDay, loadForecastCache, loadPoints, saveForecastCache, saveP
 import { currentForecast, evaluatePoint } from './lib/score.ts';
 import { haversineKm } from './lib/distance.ts';
 import { useGeolocation } from './hooks/useGeolocation.ts';
+import { usePointFilters } from './hooks/usePointFilters.ts';
 import { HomeScreen } from './components/HomeScreen.tsx';
 import { DetailScreen } from './components/DetailScreen.tsx';
 import { MapScreen } from './components/MapScreen.tsx';
@@ -86,6 +87,9 @@ export default function App() {
 
   const detailPoint = view.name === 'detail' ? points.find((p) => p.id === view.id) : undefined;
 
+  // 検索・フィルタ状態(Home と Map で共有 → 検索結果と地図表示が連動)
+  const filters = usePointFilters(ranked, geo.loc != null);
+
   let content: ReactNode;
   if (detailPoint) {
     content = (
@@ -100,7 +104,7 @@ export default function App() {
   } else if (view.name === 'map') {
     content = (
       <MapScreen
-        ranked={ranked}
+        ranked={filters.filtered}
         location={geo.loc}
         geoStatus={geo.status}
         onLocate={geo.request}
@@ -113,12 +117,15 @@ export default function App() {
     content = (
       <HomeScreen
         ranked={ranked}
+        filters={filters}
         status={status}
         stale={stale}
         lastFetched={lastFetched}
         refreshing={refreshing}
         onRefresh={refresh}
         onOpen={(id) => setView({ name: 'detail', id })}
+        geoStatus={geo.status}
+        onLocate={geo.request}
       />
     );
   }
