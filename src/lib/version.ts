@@ -6,4 +6,4 @@
  * package.json の version とこのファイルは常に同期される。
  * アプリ内表示(管理画面フッター等)はこの定数を参照する。
  */
-export const APP_VERSION = '1.8.0';
+export const APP_VERSION = '1.20.0';

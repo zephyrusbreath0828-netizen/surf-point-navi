@@ -1,5 +1,7 @@
 import type { Evaluation, Forecast, PointData, SurfPoint, WindTag, DirLetter } from '../types.ts';
 import { LETTERS16, degToLetter, dir16, sizeLabel } from './format.ts';
+import type { TideInfo } from './tide.ts';
+import { tideBand, tideBandJP, tidePrefJP, tidePrefMatch } from './tide.ts';
 
 export type { Evaluation };
 
@@ -149,12 +151,26 @@ function grade(score: number): [stars: number, label: string] {
   return [1, '今日はお休みも'];
 }
 
+/** 潮位の評価(最大+20点): 適正潮位に合致で +20、外れていれば +6(下限) */
+function tideEval(p: SurfPoint, tide: TideInfo | null | undefined): { pts: number; reason: string | null } {
+  if (!tide || tide.level01 == null) return { pts: 0, reason: null };
+  const band = tideBand(tide.level01);
+  if (band == null) return { pts: 0, reason: null };
+  const tr = tide.trend === 'rising' ? '上げ潮' : '下げ潮';
+  if (tidePrefMatch(p.tidePreference, band)) {
+    const note = p.tideComment ? p.tideComment : `${tideBandJP(band)}で地形が整いやすい`;
+    return { pts: 20, reason: `${tideBandJP(band)}(${tr}・${tide.phaseName})。${note}` };
+  }
+  return { pts: 6, reason: `潮位は${tideBandJP(band)}。適正は「${tidePrefJP(p.tidePreference)}」なので波の質は変わりそう` };
+}
+
 /** 1時刻の予報からポイントの評価を計算 */
-export function evaluatePoint(p: SurfPoint, f?: Forecast | null): Evaluation | null {
+export function evaluatePoint(p: SurfPoint, f?: Forecast | null, tide?: TideInfo | null): Evaluation | null {
   if (!f) return null;
   const w = windEval(p, f);
   const sw = swellEval(p, f);
-  let score = Math.round(w.pts + sw.pts);
+  const td = tideEval(p, tide);
+  let score = Math.round(w.pts + sw.pts + td.pts);
 
   // 安全用の上限ガード: フラットは高評価にしない / なじみサイズの倍以上はクローズアウト気味
   if (f.waveHeight != null && f.waveHeight < 0.25) score = Math.min(score, 42);
@@ -162,11 +178,16 @@ export function evaluatePoint(p: SurfPoint, f?: Forecast | null): Evaluation | n
 
   score = Math.max(0, Math.min(100, score));
   const [stars, label] = grade(score);
+  const band = tideBand(tide?.level01 ?? null);
+  const tideNote = tide && band
+    ? `${tide.phaseName}・${tide.trend === 'rising' ? '上げ潮' : '下げ潮'}・${tideBandJP(band)}`
+    : undefined;
   return {
     score,
     stars,
     label,
-    reasons: [...w.reasons, ...sw.reasons],
+    reasons: td.reason ? [...w.reasons, ...sw.reasons, td.reason] : [...w.reasons, ...sw.reasons],
+    tideNote,
     windTag: w.tag,
     windDirName: dir16(f.windDir),
     windSpeed: f.windSpeed,

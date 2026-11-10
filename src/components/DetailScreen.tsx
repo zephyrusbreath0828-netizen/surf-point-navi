@@ -6,6 +6,7 @@ import { StarRating } from './StarRating.tsx';
 import { ScoreRing } from './ScoreRing.tsx';
 import { HourlyChart } from './HourlyChart.tsx';
 import { IconBack, IconCompass, IconClock, IconTemp, IconWave, IconWind } from './icons.tsx';
+import { buildTideInfo, tideBand, tideBandJP, tidePrefJP } from '../lib/tide.ts';
 import type { ReactNode } from 'react';
 
 function Item({ icon, label, value, sub }: { icon: ReactNode; label: string; value: string; sub?: string }) {
@@ -29,7 +30,8 @@ export function DetailScreen({ point, pd, dist, onBack, onEdit }: {
   onEdit: () => void;
 }) {
   const f = pd ? currentForecast(pd) : null;
-  const ev = f ? evaluatePoint(point, f) : null;
+  const tide = pd ? buildTideInfo(pd.series, pd.curIdx) : null;
+  const ev = f ? evaluatePoint(point, f, tide) : null;
   const best = pd ? bestHourIdx(pd, point) : null;
   const bestHour = pd && best != null ? parseInt(pd.series.time[best].slice(11, 13), 10) : null;
   const offDir = offshoreDir(point);
@@ -105,6 +107,37 @@ export function DetailScreen({ point, pd, dist, onBack, onEdit }: {
                 />
               </div>
             </section>
+
+            {/* 潮汐情報(折りたたみ・デフォルト閉) */}
+            <details className="bg-white rounded-2xl border border-sand-300/60 shadow-sm p-4">
+              <summary className="text-sm font-bold text-ocean-950 cursor-pointer flex items-center justify-between">
+                潮汐情報
+                <span className="text-[10px] font-normal text-neutral-400">タップで開閉</span>
+              </summary>
+              <div className="mt-3 grid grid-cols-2 gap-2.5">
+                <Item icon={<IconWave className="w-3 h-3" />} label="現在潮位" value={tide?.current != null ? `${tide.current.toFixed(2)} m` : '—'} sub={tide && tide.level01 != null ? `本日のレンジ ${(tide.level01 * 100).toFixed(0)}%` : undefined} />
+                <Item icon={<IconClock className="w-3 h-3" />} label="現在状態" value={tide?.trend === 'rising' ? '上げ潮' : tide?.trend === 'falling' ? '下げ潮' : '—'} sub={tide ? `潮回り: ${tide.phaseName}` : undefined} />
+                <Item
+                  icon={<IconClock className="w-3 h-3" />}
+                  label="次の満潮・干潮"
+                  value={tide?.nextExtreme ? `${tide.nextExtreme.type === 'high' ? '満潮' : '干潮'} ${tide.nextExtreme.time.slice(11, 16)}` : '—'}
+                  sub={tide?.nextExtreme ? `潮位 ${tide.nextExtreme.height.toFixed(2)}m` : undefined}
+                />
+                <Item icon={<IconCompass className="w-3 h-3" />} label="適正潮位" value={tidePrefJP(point.tidePreference)} sub={point.tideComment || undefined} />
+              </div>
+              {tide && tide.extremes.length > 0 && (
+                <div className="mt-3 flex gap-1.5 flex-wrap">
+                  {tide.extremes.slice(0, 6).map((e, i) => (
+                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-sand-50 text-neutral-500">
+                      {e.type === 'high' ? '満' : '干'} {e.time.slice(11, 16)} ({e.height.toFixed(2)}m)
+                    </span>
+                  ))}
+                </div>
+              )}
+              <p className="text-[10px] text-neutral-400 mt-3 leading-relaxed">
+                潮位はOpen-Meteo Marine(sea_level)・潮回りは月齢からの概算値です。実海面は気象庁や沿岸の観測を確認してください。
+              </p>
+            </details>
 
             <HourlyChart pd={pd} point={point} />
 

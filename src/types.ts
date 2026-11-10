@@ -1,3 +1,5 @@
+export type TidePreference = 'low' | 'mid-low' | 'mid' | 'mid-high' | 'high' | 'all';
+
 export type Level = 'beginner' | 'intermediate';
 export type Bottom = 'sand' | 'reef' | 'mix';
 
@@ -30,6 +32,10 @@ export interface SurfPoint {
   waveMin: number;
   /** なじみサイズの上限(m) */
   waveMax: number;
+  /** 適正潮位(low / mid-low / mid / mid-high / high / all) */
+  tidePreference: TidePreference;
+  /** 潮位に関するメモ(任意) */
+  tideComment: string;
   level: Level;
   bottom: Bottom;
 }
@@ -53,6 +59,8 @@ export interface HourlySeries {
   waveHeight: (number | null)[];
   waveDir: (number | null)[];
   wavePeriod: (number | null)[];
+  /** 潮位(m, 平均海面基準) — Open-Meteo Marine sea_level_height_msl */
+  seaLevel: (number | null)[];
 }
 
 export interface PointData {
@@ -75,6 +83,8 @@ export interface Evaluation {
   waveDirName: string;
   wavePeriod: number | null;
   temp: number;
+  /** 潮汐サマリ(例: 大潮・上げ潮・満潮前後(高))。潮汐データ無しなら undefined */
+  tideNote?: string;
 }
 
 /** 取得した現在地 */

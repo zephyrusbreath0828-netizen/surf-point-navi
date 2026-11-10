@@ -1,3 +1,4 @@
+import heroWave from '../assets/hero-wave.jpg';
 import { useMemo, useState, type ReactNode } from 'react';
 import type { Ranked } from '../types.ts';
 import type { Evaluation } from '../lib/score.ts';
@@ -177,7 +178,10 @@ export function HomeScreen({ ranked, filters, status, stale, lastFetched, refres
 
   return (
     <div className="pb-24">
-      <header className="relative overflow-hidden bg-gradient-to-br from-ocean-950 via-ocean-900 to-ocean-700 text-white px-5 pt-6 pb-9 rounded-b-3xl">
+      <header
+        className="relative overflow-hidden bg-cover bg-center text-white px-5 pt-6 pb-9 rounded-b-3xl"
+        style={{ backgroundImage: `linear-gradient(rgba(7,25,40,0.55), rgba(7,25,40,0.78)), url(${heroWave})` }}
+      >
         <svg className="absolute -right-8 -top-10 w-44 h-44 text-white/5" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">
           <circle cx="50" cy="50" r="50" />
         </svg>

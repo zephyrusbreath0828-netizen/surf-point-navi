@@ -9,7 +9,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-002",
@@ -21,7 +23,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-003",
@@ -33,7 +37,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-004",
@@ -45,7 +51,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-005",
@@ -57,7 +65,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-006",
@@ -69,7 +79,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-007",
@@ -81,7 +93,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-008",
@@ -93,7 +107,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-009",
@@ -105,7 +121,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-010",
@@ -117,7 +135,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-011",
@@ -129,7 +149,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-012",
@@ -141,7 +163,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-013",
@@ -153,7 +177,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-hokkaido-014",
@@ -165,6 +191,8 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   }
 ]

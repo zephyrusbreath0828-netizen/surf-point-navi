@@ -9,7 +9,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-002",
@@ -21,7 +23,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-003",
@@ -33,7 +37,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-004",
@@ -45,7 +51,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-005",
@@ -57,7 +65,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-006",
@@ -69,7 +79,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-007",
@@ -81,7 +93,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-008",
@@ -93,7 +107,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-009",
@@ -105,7 +121,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-010",
@@ -117,7 +135,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-011",
@@ -129,7 +149,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-012",
@@ -141,7 +163,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-013",
@@ -153,7 +177,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-014",
@@ -165,7 +191,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-015",
@@ -177,7 +205,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-016",
@@ -189,7 +219,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-017",
@@ -201,7 +233,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-018",
@@ -213,7 +247,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-019",
@@ -225,7 +261,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-020",
@@ -237,7 +275,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-021",
@@ -249,7 +289,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-022",
@@ -261,7 +303,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-023",
@@ -273,7 +317,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-024",
@@ -285,7 +331,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-025",
@@ -297,7 +345,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-026",
@@ -309,7 +359,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-027",
@@ -321,7 +373,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-028",
@@ -333,7 +387,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-029",
@@ -345,7 +401,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-030",
@@ -357,7 +415,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-031",
@@ -369,7 +429,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-032",
@@ -381,7 +443,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-033",
@@ -393,7 +457,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-034",
@@ -405,7 +471,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-035",
@@ -417,7 +485,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-036",
@@ -429,7 +499,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-037",
@@ -441,7 +513,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-038",
@@ -453,7 +527,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-039",
@@ -465,7 +541,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-040",
@@ -477,7 +555,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-041",
@@ -489,7 +569,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-042",
@@ -501,7 +583,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-043",
@@ -513,7 +597,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-044",
@@ -525,7 +611,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-045",
@@ -537,7 +625,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-046",
@@ -549,7 +639,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-047",
@@ -561,7 +653,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-048",
@@ -573,7 +667,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-049",
@@ -585,7 +681,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-050",
@@ -597,7 +695,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-051",
@@ -609,7 +709,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-052",
@@ -621,7 +723,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-053",
@@ -633,7 +737,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-054",
@@ -645,7 +751,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-055",
@@ -657,7 +765,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-056",
@@ -669,7 +779,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-057",
@@ -681,7 +793,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-058",
@@ -693,7 +807,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-059",
@@ -705,7 +821,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-chubu-060",
@@ -717,6 +835,8 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   }
 ]

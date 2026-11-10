@@ -110,6 +110,7 @@ export function MapScreen({ ranked, location, geoStatus, onLocate, onOpen }: {
             <Tooltip direction="top" offset={[0, -12]}>
               {r.point.name}・{r.ev ? `${r.ev.score}点` : '評価 —'}
               {r.dist != null ? `・${fmtKm(r.dist)}` : ''}
+              {r.ev?.tideNote ? `・潮: ${r.ev.tideNote}` : ''}
             </Tooltip>
           </Marker>
         ))}

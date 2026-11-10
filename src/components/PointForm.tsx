@@ -71,6 +71,8 @@ export function PointForm({ initial, onSave, onDelete, onClose }: {
       goodSwell,
       waveMin,
       waveMax,
+      tidePreference: isNew ? 'all' : (initial as SurfPoint).tidePreference,
+      tideComment: isNew ? '' : (initial as SurfPoint).tideComment,
       level,
       bottom,
     });

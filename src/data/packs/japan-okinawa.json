@@ -9,7 +9,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-002",
@@ -21,7 +23,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-003",
@@ -33,7 +37,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-004",
@@ -45,7 +51,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-005",
@@ -57,7 +65,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-006",
@@ -69,7 +79,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-007",
@@ -81,7 +93,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-008",
@@ -93,7 +107,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-009",
@@ -105,7 +121,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-010",
@@ -117,7 +135,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-011",
@@ -129,7 +149,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-012",
@@ -141,7 +163,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-013",
@@ -153,7 +177,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-014",
@@ -165,7 +191,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.6,
-    "waveMax": 2.0
+    "waveMax": 2.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-015",
@@ -177,7 +205,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-016",
@@ -189,7 +219,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-018",
@@ -201,7 +233,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-019",
@@ -213,7 +247,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-021",
@@ -225,7 +261,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-022",
@@ -237,7 +275,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-023",
@@ -249,7 +289,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-024",
@@ -261,7 +303,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-026",
@@ -273,7 +317,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-027",
@@ -285,7 +331,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-028",
@@ -297,7 +345,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-029",
@@ -309,7 +359,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-030",
@@ -321,7 +373,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-031",
@@ -333,7 +387,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-032",
@@ -345,7 +401,9 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   },
   {
     "id": "jp-okinawa-033",
@@ -357,6 +415,8 @@
     "badWind": [],
     "goodSwell": [],
     "waveMin": 0.5,
-    "waveMax": 3.0
+    "waveMax": 3.0,
+    "tidePreference": "all",
+    "tideComment": ""
   }
 ]

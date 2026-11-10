@@ -1,4 +1,4 @@
-import type { Bottom, DirLetter, Level, SurfPoint } from '../types.ts';
+import type { Bottom, DirLetter, Level, SurfPoint, TidePreference } from '../types.ts';
 import { LETTERS16 } from './format.ts';
 
 const LETTER_SET = new Set<string>(LETTERS16);
@@ -45,6 +45,11 @@ export function normalizePoint(raw: unknown, region = ''): SurfPoint | null {
     goodSwell: dirList(p.goodSwell),
     waveMin,
     waveMax,
+    tidePreference: (typeof p.tidePreference === 'string' &&
+      (['low', 'mid-low', 'mid', 'mid-high', 'high', 'all'] as string[]).includes(p.tidePreference)
+      ? p.tidePreference
+      : 'all') as TidePreference,
+    tideComment: typeof p.tideComment === 'string' ? p.tideComment.slice(0, 120) : '',
     level: (p.level === 'intermediate' ? 'intermediate' : 'beginner') as Level,
     bottom: (p.bottom === 'reef' || p.bottom === 'mix' ? p.bottom : 'sand') as Bottom,
   };

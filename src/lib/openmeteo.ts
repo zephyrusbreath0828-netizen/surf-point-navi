@@ -13,7 +13,7 @@ async function getJson(url: string): Promise<any> {
 
 /** 海洋API(うねり)。cell_selection=sea で海岸に近い海側セルを掴む。失敗したらパラメータなしで再試行 */
 async function getMarine(lat: string, lon: string): Promise<any | null> {
-  const base = `${MARINE_URL}?latitude=${lat}&longitude=${lon}&hourly=wave_height,wave_direction,wave_period&timezone=Asia%2FTokyo&forecast_days=2`;
+  const base = `${MARINE_URL}?latitude=${lat}&longitude=${lon}&hourly=wave_height,wave_direction,wave_period,sea_level_height_msl&timezone=Asia%2FTokyo&forecast_days=2`;
   try {
     return await getJson(`${base}&cell_selection=sea`);
   } catch {
@@ -89,6 +89,7 @@ async function fetchChunk(points: SurfPoint[]): Promise<Record<string, PointData
       waveHeight: (mh?.wave_height as (number | null)[] | undefined) ?? new Array(n).fill(null),
       waveDir: (mh?.wave_direction as (number | null)[] | undefined) ?? new Array(n).fill(null),
       wavePeriod: (mh?.wave_period as (number | null)[] | undefined) ?? new Array(n).fill(null),
+      seaLevel: (mh?.sea_level_height_msl as (number | null)[] | undefined) ?? new Array(n).fill(null),
     };
     out[p.id] = { series, curIdx: curIndex(time), fetchedAt: Date.now() };
   });

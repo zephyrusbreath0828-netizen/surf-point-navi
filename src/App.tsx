@@ -13,7 +13,9 @@ import { ManageScreen } from './components/ManageScreen.tsx';
 import { RegisterScreen } from './components/RegisterScreen.tsx';
 import { TabBar } from './components/TabBar.tsx';
 import { genId } from './lib/normalize.ts';
-import { addUserPointMeta } from './lib/userPoints.ts';
+import { addUserPointMeta, loadUserMeta, type UserPointMeta } from './lib/userPoints.ts';
+import { buildTideInfo } from './lib/tide.ts';
+import { loadPointStatuses, savePointStatuses, type PointStatus } from './lib/pointStatus.ts';
 
 type View =
   | { name: 'home' }
@@ -31,15 +33,26 @@ export default function App() {
   const [lastFetched, setLastFetched] = useState<number | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const geo = useGeolocation();
+  const [statuses, setStatuses] = useState<Record<string, PointStatus>>(loadPointStatuses);
+  const [userMeta, setUserMeta] = useState<Record<string, UserPointMeta>>(loadUserMeta);
 
   const pointsRef = useRef(points);
   pointsRef.current = points;
   const dataRef = useRef<Record<string, PointData>>({});
 
+  const visibleIdsRef = useRef<Set<string>>(new Set());
+
   const refresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const data = await fetchPointData(pointsRef.current);
+      const targets = pointsRef.current.filter((p) => visibleIdsRef.current.has(p.id));
+      if (targets.length === 0) {
+        setById({});
+        setStatus('ok');
+        setRefreshing(false);
+        return;
+      }
+      const data = await fetchPointData(targets);
       dataRef.current = data;
       setById(data);
       setStatus('ok');
@@ -93,30 +106,62 @@ export default function App() {
         goodSwell: [],
         waveMin: 0.5,
         waveMax: 3.0,
+        tidePreference: 'all',
+        tideComment: '',
         level: 'beginner',
         bottom: 'sand',
       };
       addUserPointMeta(p.id, input.comment);
+      setUserMeta(loadUserMeta());
       updatePoints([...pointsRef.current, p]);
     },
     [updatePoints]
   );
 
+  const changeStatus = useCallback((id: string, s: PointStatus) => {
+    setStatuses((prev) => {
+      const n = { ...prev, [id]: s };
+      savePointStatuses(n);
+      return n;
+    });
+  }, []);
+  const changeStatuses = useCallback((ids: string[], s: PointStatus) => {
+    setStatuses((prev) => {
+      const n = { ...prev };
+      for (const id of ids) n[id] = s;
+      savePointStatuses(n);
+      return n;
+    });
+  }, []);
+  const clearStatuses = useCallback(() => {
+    setStatuses({});
+    savePointStatuses({});
+  }, []);
 
-  const ranked = useMemo<Ranked[]>(
+
+  const rankedAll = useMemo<Ranked[]>(
     () =>
       points
         .map((p) => {
           const pd = byId[p.id];
+          const tide = pd ? buildTideInfo(pd.series, pd.curIdx) : null;
           return {
             point: p,
-            ev: pd ? evaluatePoint(p, currentForecast(pd)) : null,
+            ev: pd ? evaluatePoint(p, currentForecast(pd), tide) : null,
             dist: geo.loc ? haversineKm(geo.loc, p) : null,
           };
         })
         .sort((a, b) => (b.ev?.score ?? -1) - (a.ev?.score ?? -1)),
     [points, byId, geo.loc]
   );
+  // 非表示ポイントはホーム・地図・ランキングから除外(管理画面で再活性化できる)
+  const ranked = useMemo(
+    () => rankedAll.filter((r) => (statuses[r.point.id] ?? 'active') !== 'hidden'),
+    [rankedAll, statuses]
+  );
+  useEffect(() => {
+    visibleIdsRef.current = new Set(ranked.map((r) => r.point.id));
+  }, [ranked]);
 
   const detailPoint = view.name === 'detail' ? points.find((p) => p.id === view.id) : undefined;
 
@@ -147,7 +192,22 @@ export default function App() {
   } else if (view.name === 'register') {
     content = <RegisterScreen points={points} onSave={addUserPoint} />;
   } else if (view.name === 'manage') {
-    content = <ManageScreen points={points} onSaveAll={updatePoints} initialEdit={view.edit} />;
+    content = (
+      <ManageScreen
+        points={points}
+        rankedAll={rankedAll}
+        statuses={statuses}
+        userMeta={userMeta}
+        onChangeStatus={changeStatus}
+        onChangeStatuses={changeStatuses}
+        onClearStatuses={clearStatuses}
+        geoLoc={geo.loc}
+        onSaveAll={updatePoints}
+        initialEdit={view.edit}
+        geoStatus={geo.status}
+        onLocate={geo.request}
+      />
+    );
   } else {
     content = (
       <HomeScreen
