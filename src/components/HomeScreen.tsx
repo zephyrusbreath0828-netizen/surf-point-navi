@@ -39,11 +39,13 @@ function RankCard({ rank, r, onOpen }: { rank: number; r: Ranked; onOpen: (id: s
           <div className="flex items-center gap-2 mt-1">
             <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-sand-100 text-neutral-500 shrink-0">{r.point.prefecture}</span>
             <StarRating stars={ev.stars} />
-            {r.dist != null && (
-              <span className="ml-auto inline-flex items-center gap-0.5 text-[11px] text-neutral-400 shrink-0">
+            {r.dist != null ? (
+              <span className="ml-auto inline-flex items-center gap-0.5 text-[11px] text-neutral-500 font-bold shrink-0">
                 <IconPin className="w-3 h-3" />
-                現在地から{fmtKm(r.dist)}
+                距離 {fmtKm(r.dist)}
               </span>
+            ) : (
+              <span className="ml-auto text-[10px] text-neutral-300 shrink-0">現在地を許可すると距離が表示されます</span>
             )}
           </div>
         </div>

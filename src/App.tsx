@@ -233,6 +233,9 @@ export default function App() {
         dist={geo.loc ? haversineKm(geo.loc, detailPoint) : null}
         onBack={() => setView({ name: 'home' })}
         onEdit={() => setView({ name: 'manage', edit: detailPoint.id })}
+        geoStatus={geo.status}
+        onLocate={geo.request}
+        userLoc={geo.loc}
       />
     );
   } else if (view.name === 'map') {

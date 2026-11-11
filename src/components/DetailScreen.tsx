@@ -5,9 +5,11 @@ import { fmtKm } from '../lib/distance.ts';
 import { StarRating } from './StarRating.tsx';
 import { ScoreRing } from './ScoreRing.tsx';
 import { HourlyChart } from './HourlyChart.tsx';
-import { IconBack, IconCompass, IconClock, IconTemp, IconWave, IconWind } from './icons.tsx';
+import { IconBack, IconCompass, IconClock, IconLocate, IconTemp, IconWave, IconWind } from './icons.tsx';
+import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
+import L from 'leaflet';
 import { buildTideInfo, tideBand, tideBandJP, tidePrefJP } from '../lib/tide.ts';
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 
 function Item({ icon, label, value, sub }: { icon: ReactNode; label: string; value: string; sub?: string }) {
   return (
@@ -22,12 +24,20 @@ function Item({ icon, label, value, sub }: { icon: ReactNode; label: string; val
   );
 }
 
-export function DetailScreen({ point, pd, dist, onBack, onEdit }: {
+/** 直線距離の表示(ハーサイン計算結果 km → 小数第1位) */
+function distText(km: number): string {
+  return km < 100 ? `${km.toFixed(1)}km` : `${Math.round(km)}km`;
+}
+
+export function DetailScreen({ point, pd, dist, onBack, onEdit, geoStatus, onLocate, userLoc }: {
   point: SurfPoint;
   pd: PointData | undefined;
   dist?: number | null;
   onBack: () => void;
   onEdit: () => void;
+  geoStatus?: 'idle' | 'loading' | 'ok' | 'error';
+  onLocate?: () => void;
+  userLoc?: { lat: number; lon: number } | null;
 }) {
   const f = pd ? currentForecast(pd) : null;
   const tide = pd ? buildTideInfo(pd.series, pd.curIdx) : null;
@@ -67,6 +77,67 @@ export function DetailScreen({ point, pd, dist, onBack, onEdit }: {
 
         {pd && f && ev && (
           <>
+            {/* 現在地からの直線距離 */}
+            <section className="bg-white rounded-2xl border border-sand-300/60 shadow-sm p-4 flex items-center gap-3">
+              <span className="w-10 h-10 rounded-xl bg-lagoon-500/10 text-lagoon-600 flex items-center justify-center shrink-0">
+                <IconLocate className="w-5 h-5" />
+              </span>
+              {dist != null ? (
+                <div className="flex-1 min-w-0">
+                  <div className="text-[10px] font-bold text-neutral-400">現在地から</div>
+                  <div className="text-xl font-black text-ocean-950 leading-tight">{distText(dist)}</div>
+                  <div className="text-[10px] text-neutral-400">直線距離(ハーサイン計算)</div>
+                </div>
+              ) : (
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13px] font-bold text-neutral-600 leading-snug">現在地を許可すると距離が表示されます</div>
+                  {geoStatus !== 'loading' && onLocate && (
+                    <button onClick={onLocate} className="mt-1.5 text-xs font-bold text-lagoon-600 underline">
+                      現在地を取得する
+                    </button>
+                  )}
+                  {geoStatus === 'loading' && <div className="text-[11px] text-neutral-400 mt-1">現在地を取得中…</div>}
+                </div>
+              )}
+            </section>
+
+            {/* 周辺地図(ポイント + 現在地・直線) */}
+            <section className="bg-white rounded-2xl border border-sand-300/60 shadow-sm p-4">
+              <h2 className="text-sm font-bold text-ocean-950 mb-3">周辺地図</h2>
+              <div className="h-[280px] rounded-xl overflow-hidden border border-sand-300">
+                <MapContainer
+                  center={[point.lat, point.lon]}
+                  zoom={userLoc ? 10 : 13}
+                  zoomControl={false}
+                  scrollWheelZoom={false}
+                  className="h-full w-full"
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <FitBoth point={[point.lat, point.lon]} user={userLoc ? [userLoc.lat, userLoc.lon] : null} />
+                  <Marker position={[point.lat, point.lon]} icon={waveMarker()}>
+                    <DetailTip label={`${point.name}(${point.prefecture})`} />
+                  </Marker>
+                  {userLoc && (
+                    <>
+                      <Marker position={[userLoc.lat, userLoc.lon]} icon={userMarker()}>
+                        <DetailTip label="現在地" />
+                      </Marker>
+                      <Polyline
+                        positions={[[point.lat, point.lon], [userLoc.lat, userLoc.lon]]}
+                        pathOptions={{ color: '#0e7490', weight: 2, dashArray: '6 6', opacity: 0.7 }}
+                      />
+                    </>
+                  )}
+                </MapContainer>
+              </div>
+              <p className="text-[10px] text-neutral-400 mt-1.5 px-1">
+                現在地↔ポイントの直線を表示しています(ルート案内は含まれません)。
+              </p>
+            </section>
+
             <section className="bg-white rounded-2xl border border-sand-300/60 shadow-sm p-4 flex items-center gap-4">
               <ScoreRing score={ev.score} id="detail" />
               <div className="flex-1 min-w-0">
@@ -166,4 +237,52 @@ export function DetailScreen({ point, pd, dist, onBack, onEdit }: {
       </main>
     </div>
   );
+}
+
+import { Tooltip } from 'react-leaflet';
+import { useMap } from 'react-leaflet';
+
+/** ポイントと現在地の両方が収まるように表示範囲を調整 */
+function FitBoth({ point, user }: { point: [number, number]; user: [number, number] | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!user) {
+      map.setView(point, 13);
+      return;
+    }
+    map.fitBounds(L.latLngBounds([point, user]), { padding: [40, 60] });
+    // point/user は詳細画面の遷移ごとに固定
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map]);
+  return null;
+}
+
+function DetailTip({ label }: { label: string }) {
+  return (
+    <Tooltip direction="top" offset={[0, -12]}>
+      {label}
+    </Tooltip>
+  );
+}
+
+/** ポイント側マーカー(波アイコン風・スコアリング配色) */
+function waveMarker(): L.DivIcon {
+  return L.divIcon({
+    className: 'ssn-marker',
+    html: `<span style="display:block;width:26px;height:26px;border-radius:9999px;background:#0e7490;border:3px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.45)"><svg viewBox="0 0 24 24" width="16" height="16" x="2" y="2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M2 14c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg></span>`,
+    iconSize: [26, 26],
+    iconAnchor: [13, 13],
+    tooltipAnchor: [0, -13],
+  });
+}
+
+/** 現在地マーカー(青ドット) */
+function userMarker(): L.DivIcon {
+  return L.divIcon({
+    className: 'ssn-marker',
+    html: `<span style="display:block;position:relative;width:22px;height:22px"><span style="position:absolute;inset:4px;border-radius:9999px;background:#2563eb;border:2.5px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.45)"></span></span>`,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+    tooltipAnchor: [0, -11],
+  });
 }
