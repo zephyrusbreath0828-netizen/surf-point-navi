@@ -1,8 +1,8 @@
 import heroWave from '../assets/hero-wave.jpg';
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { Ranked } from '../types.ts';
 import type { Evaluation } from '../lib/score.ts';
-import { WIND_TAG_LABEL, fmtHM, sizeLabel, todayLabel } from '../lib/format.ts';
+import { WIND_TAG_LABEL, sizeLabel, todayLabel } from '../lib/format.ts';
 import { fmtKm } from '../lib/distance.ts';
 import { REGIONS, prefecturesFor } from '../lib/regions.ts';
 import type { PointFilters, DistLimit, SortKey, ViewLimit } from '../hooks/usePointFilters.ts';
@@ -167,6 +167,21 @@ export function HomeScreen({ ranked, filters, status, stale, lastFetched, refres
   onLocate: () => void;
 }) {
   const [panelOpen, setPanelOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [doneFlash, setDoneFlash] = useState(false);
+  const prevRefreshing = useRef(refreshing);
+  useEffect(() => {
+    if (prevRefreshing.current && !refreshing) setDoneFlash(true);
+    prevRefreshing.current = refreshing;
+  }, [refreshing]);
+  useEffect(() => {
+    if (!doneFlash) return;
+    const t = window.setTimeout(() => setDoneFlash(false), 2500);
+    return () => window.clearTimeout(t);
+  }, [doneFlash]);
+  const updatedFull = lastFetched != null
+    ? new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(lastFetched))
+    : null;
 
   const filtered = filters.filtered;
   // ランキングはフィルタ後の集合からスコア順で算出(ランキング機能を維持)
@@ -174,7 +189,7 @@ export function HomeScreen({ ranked, filters, status, stale, lastFetched, refres
     const byScore = [...filtered].sort((a, b) => (b.ev?.score ?? -1) - (a.ev?.score ?? -1));
     return byScore.filter((r) => r.ev != null).slice(0, 3);
   }, [filtered]);
-  const shown = filters.limit === 0 ? filtered : filtered.slice(0, filters.limit);
+  const shown = filters.limit === 0 || moreOpen ? filtered : filtered.slice(0, filters.limit);
 
   return (
     <div className="pb-24">
@@ -196,12 +211,26 @@ export function HomeScreen({ ranked, filters, status, stale, lastFetched, refres
         </div>
         <div className="mt-2.5 flex items-center gap-2 text-[11px] text-foam-200/90 relative">
           <span className="font-bold">{todayLabel()}</span>
-          {lastFetched != null && <span>・{fmtHM(lastFetched)} 取得</span>}
+          {updatedFull && <span>・最終更新 {updatedFull}</span>}
           {stale && <span className="px-1.5 py-0.5 rounded bg-sun-500/20 text-sun-500 font-bold">保存した予報を表示</span>}
         </div>
       </header>
 
       <main className="px-4 -mt-6 relative space-y-4 pb-4">
+        {(refreshing || doneFlash) && (
+          <div className="flex justify-center">
+            <span className="inline-flex items-center gap-1.5 bg-ocean-950/85 text-white text-[11px] font-bold rounded-full px-3 py-1.5 backdrop-blur">
+              {refreshing ? (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-foam-200 animate-pulse" />
+                  最新データへ更新中...
+                </>
+              ) : (
+                <>✓ 更新完了</>
+              )}
+            </span>
+          </div>
+        )}
         {status === 'error' && (
           <section className="bg-white rounded-2xl border border-coral-500/30 p-5">
             <p className="text-sm font-bold text-coral-500">予報を取得できませんでした</p>
@@ -303,9 +332,15 @@ export function HomeScreen({ ranked, filters, status, stale, lastFetched, refres
         )}
 
         {status !== 'error' && filtered.length > shown.length && (
-          <p className="text-center text-[11px] text-neutral-400">
-            残り {filtered.length - shown.length}件 — 表示件数を「全件」に変更すると全て表示されます
-          </p>
+          <div className="space-y-1.5">
+            <button
+              onClick={() => setMoreOpen(true)}
+              className="w-full bg-white border border-ocean-800 text-ocean-800 rounded-xl py-2.5 text-xs font-bold active:bg-sand-100"
+            >
+              もっと見る(残り {filtered.length - shown.length}件)
+            </button>
+            <p className="text-center text-[10px] text-neutral-400">表示件数フィルタで「全件」に切り替えることもできます</p>
+          </div>
         )}
 
         <p className="text-[10px] text-neutral-400 leading-relaxed px-1">

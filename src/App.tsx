@@ -15,6 +15,7 @@ import { TabBar } from './components/TabBar.tsx';
 import { genId } from './lib/normalize.ts';
 import { addUserPointMeta, loadUserMeta, type UserPointMeta } from './lib/userPoints.ts';
 import { buildTideInfo } from './lib/tide.ts';
+import { evFromSnapshot, isFresh, loadRankCache, saveRankCache, RANK_TTL_MS, type RankCache } from './lib/cache.ts';
 import { loadPointStatuses, savePointStatuses, type PointStatus } from './lib/pointStatus.ts';
 
 type View =
@@ -34,6 +35,9 @@ export default function App() {
   const [refreshing, setRefreshing] = useState(false);
   const geo = useGeolocation();
   const [statuses, setStatuses] = useState<Record<string, PointStatus>>(loadPointStatuses);
+  /** 起動直後の暫定表示用スナップショット(気象キャッシュ無しのときのみ使用) */
+  const [snap, setSnap] = useState<RankCache | null>(null);
+  const [updatedJustNow, setUpdatedJustNow] = useState(false);
   const [userMeta, setUserMeta] = useState<Record<string, UserPointMeta>>(loadUserMeta);
 
   const pointsRef = useRef(points);
@@ -42,7 +46,16 @@ export default function App() {
 
   const visibleIdsRef = useRef<Set<string>>(new Set());
 
-  const refresh = useCallback(async () => {
+  const lastFetchRef = useRef<number | null>(null);
+  const geoLocRef = useRef<{ lat: number; lon: number } | null>(null);
+  geoLocRef.current = geo.loc;
+
+  /** 近隣300kmを先に取得→遠方を裏で取得(不要なAPI取得を削減) */
+  const NEAR_KM = 300;
+
+  const refresh = useCallback(async (force = false) => {
+    // キャッシュ有効期限内(3h)の再アクセスでは Open-Meteo を取りに行かない
+    if (!force && lastFetchRef.current != null && Date.now() - lastFetchRef.current < RANK_TTL_MS) return;
     setRefreshing(true);
     try {
       const targets = pointsRef.current.filter((p) => visibleIdsRef.current.has(p.id));
@@ -52,13 +65,34 @@ export default function App() {
         setRefreshing(false);
         return;
       }
-      const data = await fetchPointData(targets);
-      dataRef.current = data;
-      setById(data);
+      const loc = geoLocRef.current;
+      // 現在地が分かっているときは近隣のみ先に評価(遠距離地域は後方フェーズへ)
+      const near = loc ? targets.filter((p) => haversineKm(loc, p) <= NEAR_KM) : targets;
+      const far = loc ? targets.filter((p) => !near.includes(p)) : [];
+      const first = await fetchPointData(near);
+      dataRef.current = { ...dataRef.current, ...first };
+      setById(dataRef.current);
       setStatus('ok');
-      setStale(false);
       setLastFetched(Date.now());
-      saveForecastCache({ fetchedAt: Date.now(), data });
+      lastFetchRef.current = Date.now();
+      saveForecastCache({ fetchedAt: Date.now(), data: dataRef.current });
+
+      // 遠方ポイントは裏で取得して差し込み(表示は既に返済済み)
+      if (far.length > 0) {
+        void (async () => {
+          try {
+            const rest = await fetchPointData(far);
+            dataRef.current = { ...dataRef.current, ...rest };
+            setById(dataRef.current);
+            saveForecastCache({ fetchedAt: Date.now(), data: dataRef.current });
+          } catch {
+            /* 遠方の失敗は無視(近隣は生きている) */
+          }
+        })();
+      }
+      setStale(false);
+      setUpdatedJustNow(true);
+      window.setTimeout(() => setUpdatedJustNow(false), 3000);
     } catch {
       if (Object.keys(dataRef.current).length === 0) setStatus('error');
       else setStale(true);
@@ -68,18 +102,31 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    // 1) 保存済みの予報キャッシュがあれば即表示(0.5秒以内の初回描画)
     const cached = loadForecastCache();
-    if (cached && isSameTokyoDay(cached.fetchedAt)) {
+    if (cached) {
       dataRef.current = cached.data;
       setById(cached.data);
       setStatus('ok');
       setStale(true);
       setLastFetched(cached.fetchedAt);
+      lastFetchRef.current = cached.fetchedAt;
+    } else {
+      // 2) 気象キャッシュが無くても前回ランキングのスナップショットで暫定表示
+      const rc = loadRankCache();
+      if (rc) {
+        setSnap(rc);
+        setStatus('ok');
+        setStale(true);
+        setLastFetched(rc.fetchedAt);
+      }
     }
-    refresh();
-    const t = window.setInterval(refresh, 30 * 60 * 1000);
+    // 3) 有効期限(3h)切れのときだけ裏で最新化。期限内は再取得しない
+    if (!cached || !isFresh(cached.fetchedAt)) refresh();
+    const t = window.setInterval(() => refresh(), 30 * 60 * 1000);
     return () => window.clearInterval(t);
-  }, [refresh]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   const updatePoints = useCallback(
@@ -145,14 +192,15 @@ export default function App() {
         .map((p) => {
           const pd = byId[p.id];
           const tide = pd ? buildTideInfo(pd.series, pd.curIdx) : null;
+          const snapEv = !pd && snap ? (snap.items.find((s) => s.id === p.id) ? evFromSnapshot(snap.items.find((s) => s.id === p.id)!) : null) : null;
           return {
             point: p,
-            ev: pd ? evaluatePoint(p, currentForecast(pd), tide) : null,
+            ev: pd ? evaluatePoint(p, currentForecast(pd), tide) : snapEv,
             dist: geo.loc ? haversineKm(geo.loc, p) : null,
           };
         })
         .sort((a, b) => (b.ev?.score ?? -1) - (a.ev?.score ?? -1)),
-    [points, byId, geo.loc]
+    [points, byId, geo.loc, snap]
   );
   // 非表示ポイントはホーム・地図・ランキングから除外(管理画面で再活性化できる)
   const ranked = useMemo(
@@ -162,6 +210,14 @@ export default function App() {
   useEffect(() => {
     visibleIdsRef.current = new Set(ranked.map((r) => r.point.id));
   }, [ranked]);
+
+  // ランキング結果・スコア・取得日時を localStorage へ保存(次回起動の暫定表示用)
+  useEffect(() => {
+    if (lastFetched != null && rankedAll.some((r) => r.ev && r.ev.windSpeed !== 0 || r.ev)) {
+      const real = rankedAll.filter((r) => r.ev && r.ev.reasons.length > 0);
+      if (real.length > 0) saveRankCache(real, lastFetched);
+    }
+  }, [rankedAll, lastFetched]);
 
   const detailPoint = view.name === 'detail' ? points.find((p) => p.id === view.id) : undefined;
 
@@ -217,7 +273,7 @@ export default function App() {
         stale={stale}
         lastFetched={lastFetched}
         refreshing={refreshing}
-        onRefresh={refresh}
+        onRefresh={() => refresh(true)}
         onOpen={(id) => setView({ name: 'detail', id })}
         geoStatus={geo.status}
         onLocate={geo.request}

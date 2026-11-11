@@ -17,7 +17,7 @@ export function usePointFilters(ranked: Ranked[], hasLocation: boolean) {
   const [pref, setPref] = useState<string>('all');
   const [maxDist, setMaxDist] = useState<DistLimit>(0);
   const [sort, setSort] = useState<SortKey>('score');
-  const [limit, setLimit] = useState<ViewLimit>(10);
+  const [limit, setLimit] = useState<ViewLimit>(20);
 
   const setRegionAndResetPref = useCallback((v: string) => {
     setRegion(v);
@@ -72,7 +72,7 @@ export function usePointFilters(ranked: Ranked[], hasLocation: boolean) {
     (pref !== 'all' ? 1 : 0) +
     (maxDist > 0 ? 1 : 0) +
     (sort !== 'score' ? 1 : 0) +
-    (limit !== 10 ? 1 : 0);
+    (limit !== 20 ? 1 : 0);
 
   return {
     q, setQ,
