@@ -32,25 +32,36 @@ function RankCard({ rank, r, onOpen }: { rank: number; r: Ranked; onOpen: (id: s
       onClick={() => onOpen(r.point.id)}
       className="w-full text-left bg-white rounded-2xl border border-sand-300/60 shadow-sm p-4 active:scale-[0.985] transition-transform"
     >
-      <div className="flex items-center gap-3">
+      {/* 上段: バッジ + 名前 + スコアリング(距離はこの行に置かない) */}
+      <div className="flex items-start gap-3">
         <RankBadge rank={rank} />
         <div className="flex-1 min-w-0">
-          <div className="font-bold text-lg text-ocean-950 leading-tight truncate">{r.point.name}</div>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="font-bold text-lg text-ocean-950 leading-tight break-words">{r.point.name}</div>
+          <div className="flex flex-wrap items-center gap-1.5 mt-1">
             <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-sand-100 text-neutral-500 shrink-0">{r.point.prefecture}</span>
             <StarRating stars={ev.stars} />
-            {r.dist != null ? (
-              <span className="ml-auto inline-flex items-center gap-0.5 text-[11px] text-neutral-500 font-bold shrink-0">
-                <IconPin className="w-3 h-3" />
-                距離 {fmtKm(r.dist)}
-              </span>
-            ) : (
-              <span className="ml-auto text-[10px] text-neutral-300 shrink-0">現在地を許可すると距離が表示されます</span>
-            )}
           </div>
         </div>
         <ScoreRing score={ev.score} id={`rank${rank}`} />
       </div>
+
+      {/* 中段: 左にスコア(強調)・右に距離(補助) を別行で並べる — 幅が狭くても重ならない */}
+      <div className="mt-2.5 pt-2.5 border-t border-sand-100 flex items-end justify-between gap-2">
+        <span className="font-display font-black text-2xl text-ocean-900 leading-none">
+          {ev.score}
+          <span className="text-[11px] font-bold text-neutral-400 ml-1">点</span>
+        </span>
+        {r.dist != null ? (
+          <span className="inline-flex items-center gap-1 text-[11px] text-neutral-400 shrink-0 max-w-[45%]">
+            <IconPin className="w-3 h-3 shrink-0" />
+            <span className="truncate">距離 {fmtKm(r.dist)}</span>
+          </span>
+        ) : (
+          <span className="text-[10px] text-neutral-300 text-right leading-tight">現在地を許可すると<br />距離が表示されます</span>
+        )}
+      </div>
+
+      {/* 下段: 風・波・うねりチップ(折り返し可) */}
       <div className="mt-2.5 flex flex-wrap gap-1.5 text-[11px] font-medium">
         <span className={`px-2 py-0.5 rounded-full ${windChipClass(ev.windTag)}`}>
           {WIND_TAG_LABEL[ev.windTag]}・{ev.windDirName}風 {ev.windSpeed.toFixed(1)}m/s
@@ -327,7 +338,7 @@ export function HomeScreen({ ranked, filters, status, stale, lastFetched, refres
                   </span>
                 </span>
                 {r.ev && <StarRating stars={r.ev.stars} className="w-3.5 h-3.5" />}
-                {r.ev && <span className="font-display font-extrabold text-ocean-800 w-8 text-right shrink-0">{r.ev.score}</span>}
+                {r.ev && <span className="font-display font-extrabold text-ocean-800 text-right shrink-0">{r.ev.score}点</span>}
               </button>
             ))}
           </section>
