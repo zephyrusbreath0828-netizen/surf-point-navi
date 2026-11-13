@@ -3,7 +3,8 @@ import type { Ranked } from '../types.ts';
 
 export type SortKey = 'score' | 'dist' | 'name';
 /** 距離フィルタの上限 km。0 = すべて */
-export type DistLimit = 0 | 50 | 100 | 200 | 300 | 500;
+/** 距離フィルタの上限 km。0 = 全国(制限なし) */
+export type DistLimit = 0 | 100 | 200 | 300 | 500;
 /** 一覧の最大表示件数。0 = 全件 */
 export type ViewLimit = 10 | 20 | 50 | 0;
 
@@ -15,7 +16,7 @@ export function usePointFilters(ranked: Ranked[], hasLocation: boolean) {
   const [q, setQ] = useState('');
   const [region, setRegion] = useState<string>('all');
   const [pref, setPref] = useState<string>('all');
-  const [maxDist, setMaxDist] = useState<DistLimit>(0);
+  const [maxDist, setMaxDist] = useState<DistLimit>(200);
   const [sort, setSort] = useState<SortKey>('score');
   const [limit, setLimit] = useState<ViewLimit>(20);
 
@@ -28,7 +29,7 @@ export function usePointFilters(ranked: Ranked[], hasLocation: boolean) {
     setQ('');
     setRegion('all');
     setPref('all');
-    setMaxDist(0);
+    setMaxDist(200);
     setSort('score');
     setLimit(10);
   }, []);
@@ -70,7 +71,7 @@ export function usePointFilters(ranked: Ranked[], hasLocation: boolean) {
     (q.trim() ? 1 : 0) +
     (region !== 'all' ? 1 : 0) +
     (pref !== 'all' ? 1 : 0) +
-    (maxDist > 0 ? 1 : 0) +
+    (maxDist !== 200 ? 1 : 0) +
     (sort !== 'score' ? 1 : 0) +
     (limit !== 20 ? 1 : 0);
 

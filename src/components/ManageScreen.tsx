@@ -229,12 +229,11 @@ export function ManageScreen({ points, rankedAll, statuses, userMeta, onChangeSt
                       if (geoStatus === 'idle') onLocate();
                     }}
                   >
-                    <option value={0}>すべて</option>
-                    <option value={50}>50km以内</option>
                     <option value={100}>100km以内</option>
-                    <option value={200}>200km以内</option>
+                    <option value={200}>200km以内(既定)</option>
                     <option value={300}>300km以内</option>
                     <option value={500}>500km以内</option>
+                    <option value={0}>全国</option>
                   </select>
                 </FilterRow>
                 <FilterRow label="登録種別">

@@ -207,9 +207,6 @@ export default function App() {
     () => rankedAll.filter((r) => (statuses[r.point.id] ?? 'active') !== 'hidden'),
     [rankedAll, statuses]
   );
-  useEffect(() => {
-    visibleIdsRef.current = new Set(ranked.map((r) => r.point.id));
-  }, [ranked]);
 
   // ランキング結果・スコア・取得日時を localStorage へ保存(次回起動の暫定表示用)
   useEffect(() => {
@@ -223,6 +220,9 @@ export default function App() {
 
   // 検索・フィルタ状態(Home と Map で共有 → 検索結果と地図表示が連動)
   const filters = usePointFilters(ranked, geo.loc != null);
+  useEffect(() => {
+    visibleIdsRef.current = new Set(filters.filtered.map((r) => r.point.id));
+  }, [filters.filtered]);
 
   let content: ReactNode;
   if (detailPoint) {

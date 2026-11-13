@@ -127,12 +127,11 @@ function FilterPanel({ ranked, filters, geoStatus, onLocate }: {
               if (geoStatus === 'idle') onLocate();
             }}
           >
-            <option value={0}>すべて</option>
-            <option value={50}>50km以内</option>
             <option value={100}>100km以内</option>
-            <option value={200}>200km以内</option>
+            <option value={200}>200km以内(既定)</option>
             <option value={300}>300km以内</option>
             <option value={500}>500km以内</option>
+            <option value={0}>全国</option>
           </select>
         </FilterRow>
         <FilterRow label="並び替え">
@@ -283,8 +282,18 @@ export function HomeScreen({ ranked, filters, status, stale, lastFetched, refres
           </div>
           {panelOpen && <FilterPanel ranked={ranked} filters={filters} geoStatus={geoStatus} onLocate={onLocate} />}
           <p className="text-[11px] text-neutral-500 px-1">
-            検索結果 <span className="font-bold text-ocean-900">{filtered.length}</span>件
-            <span className="text-neutral-400">・地図タブにも同じ結果を表示</span>
+            {filters.maxDist > 0 && geoStatus === 'ok' ? (
+              <>
+                現在の表示範囲 <span className="font-bold text-ocean-900">{filters.maxDist}km以内</span>
+                ・対象件数 <span className="font-bold text-ocean-900">{filtered.length}</span>件
+                <span className="text-neutral-400">・地図タブにも同じ範囲を表示</span>
+              </>
+            ) : (
+              <>
+                検索結果 <span className="font-bold text-ocean-900">{filtered.length}</span>件
+                <span className="text-neutral-400">・地図タブにも同じ結果を表示</span>
+              </>
+            )}
           </p>
         </section>
 
