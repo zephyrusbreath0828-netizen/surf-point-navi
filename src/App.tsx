@@ -53,16 +53,25 @@ export default function App() {
   /** 近隣300kmを先に取得→遠方を裏で取得(不要なAPI取得を削減) */
   const NEAR_KM = 300;
 
+  const refreshingRef = useRef(false);
+  const [cacheCount, setCacheCount] = useState(0);
+
   const refresh = useCallback(async (force = false) => {
     // キャッシュ有効期限内(3h)の再アクセスでは Open-Meteo を取りに行かない
     if (!force && lastFetchRef.current != null && Date.now() - lastFetchRef.current < RANK_TTL_MS) return;
+    if (refreshingRef.current) return; // 二重取得ガード
+    refreshingRef.current = true;
     setRefreshing(true);
+    console.log('[App] 予報更新を開始 (force=%s)', force);
     try {
-      const targets = pointsRef.current.filter((p) => visibleIdsRef.current.has(p.id));
+      // 起動直後はフィルタ確定前で visibleIds が空 → フォールバックで全ポイント対象
+      const vis = visibleIdsRef.current;
+      const targets = vis.size > 0 ? pointsRef.current.filter((p) => vis.has(p.id)) : pointsRef.current;
       if (targets.length === 0) {
         setById({});
         setStatus('ok');
         setRefreshing(false);
+        refreshingRef.current = false;
         return;
       }
       const loc = geoLocRef.current;
@@ -91,12 +100,14 @@ export default function App() {
         })();
       }
       setStale(false);
+      setCacheCount(0);
       setUpdatedJustNow(true);
       window.setTimeout(() => setUpdatedJustNow(false), 3000);
     } catch {
       if (Object.keys(dataRef.current).length === 0) setStatus('error');
       else setStale(true);
     } finally {
+      refreshingRef.current = false;
       setRefreshing(false);
     }
   }, []);
@@ -111,6 +122,7 @@ export default function App() {
       setStale(true);
       setLastFetched(cached.fetchedAt);
       lastFetchRef.current = cached.fetchedAt;
+      setCacheCount(Object.keys(cached.data).length);
     } else {
       // 2) 気象キャッシュが無くても前回ランキングのスナップショットで暫定表示
       const rc = loadRankCache();
@@ -124,7 +136,14 @@ export default function App() {
     // 3) 有効期限(3h)切れのときだけ裏で最新化。期限内は再取得しない
     if (!cached || !isFresh(cached.fetchedAt)) refresh();
     const t = window.setInterval(() => refresh(), 30 * 60 * 1000);
-    return () => window.clearInterval(t);
+    // ウォッチドッグ: 30秒経っても評価データが出揃わなければエラー表示(無限「データ取得中」防止)
+    const wd = window.setTimeout(() => {
+      setStatus((s) => (s === 'loading' ? 'error' : s));
+    }, 30_000);
+    return () => {
+      window.clearInterval(t);
+      window.clearTimeout(wd);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -222,6 +241,11 @@ export default function App() {
   const filters = usePointFilters(ranked, geo.loc != null);
   useEffect(() => {
     visibleIdsRef.current = new Set(filters.filtered.map((r) => r.point.id));
+    // 起動直後に refresh が「対象0件」で空振りした場合、フィルタ確定のこの時点で再取得
+    if (!refreshingRef.current && Object.keys(dataRef.current).length === 0 && lastFetchRef.current == null) {
+      refresh();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters.filtered]);
 
   let content: ReactNode;
@@ -280,6 +304,7 @@ export default function App() {
         onOpen={(id) => setView({ name: 'detail', id })}
         geoStatus={geo.status}
         onLocate={geo.request}
+        debug={{ evalTargets: filters.filtered.length, fetched: Object.keys(byId).length, cached: cacheCount }}
       />
     );
   }

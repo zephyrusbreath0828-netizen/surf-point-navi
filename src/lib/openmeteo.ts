@@ -4,7 +4,7 @@ const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast';
 const MARINE_URL = 'https://marine-api.open-meteo.com/v1/marine';
 
 async function getJson(url: string): Promise<any> {
-  const res = await fetch(url);
+  const res = await fetch(url, { signal: AbortSignal.timeout(30_000) });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const j = await res.json();
   if (j && j.error) throw new Error(j.reason || 'API error');
@@ -60,7 +60,10 @@ export async function fetchPointData(points: SurfPoint[]): Promise<Record<string
   for (let i = 0; i < points.length; i += CHUNK_SIZE) {
     chunks.push(points.slice(i, i + CHUNK_SIZE));
   }
+  console.log('[Open-Meteo] 取得開始: %d点 / チャンク%d回 (Forecast=%d・Marine=%d)', points.length, chunks.length, chunks.length, chunks.length);
+  const t0 = Date.now();
   const parts = await Promise.all(chunks.map((c) => fetchChunk(c)));
+  console.log('[Open-Meteo] 取得完了: %d点 / %d ms', Object.keys(Object.assign({}, ...parts)).length, Date.now() - t0);
   return Object.assign({}, ...parts);
 }
 

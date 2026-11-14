@@ -95,6 +95,7 @@ function FilterPanel({ ranked, filters, geoStatus, onLocate }: {
   filters: PointFilters;
   geoStatus: 'idle' | 'loading' | 'ok' | 'error';
   onLocate: () => void;
+  debug?: { evalTargets: number; fetched: number; cached: number };
 }) {
   const prefs = useMemo(() => prefecturesFor(ranked, filters.region), [ranked, filters.region]);
   return (
@@ -166,7 +167,7 @@ function FilterPanel({ ranked, filters, geoStatus, onLocate }: {
   );
 }
 
-export function HomeScreen({ ranked, filters, status, stale, lastFetched, refreshing, onRefresh, onOpen, geoStatus, onLocate }: {
+export function HomeScreen({ ranked, filters, status, stale, lastFetched, refreshing, onRefresh, onOpen, geoStatus, onLocate, debug }: {
   ranked: Ranked[];
   filters: PointFilters;
   status: 'loading' | 'ok' | 'error';
@@ -176,6 +177,7 @@ export function HomeScreen({ ranked, filters, status, stale, lastFetched, refres
   onRefresh: () => void;
   onOpen: (id: string) => void;
   geoStatus: 'idle' | 'loading' | 'ok' | 'error';
+  debug?: { evalTargets: number; fetched: number; cached: number };
   onLocate: () => void;
 }) {
   const [panelOpen, setPanelOpen] = useState(false);
@@ -292,10 +294,32 @@ export function HomeScreen({ ranked, filters, status, stale, lastFetched, refres
               <>
                 検索結果 <span className="font-bold text-ocean-900">{filtered.length}</span>件
                 <span className="text-neutral-400">・地図タブにも同じ結果を表示</span>
+                {filters.maxDist > 0 && geoStatus === 'error' && (
+                  <span className="block text-coral-500">現在地を取得できなかったため距離絞り込みは無効です(全国の評価対象から表示)</span>
+                )}
               </>
             )}
           </p>
         </section>
+
+        {status === 'ok' && filtered.length === 0 && (
+          <section className="bg-white rounded-2xl border border-sand-300/60 p-5 text-center">
+            <p className="text-sm font-bold text-ocean-950">{filters.q.trim() ? '該当するポイントがありません' : 'ランキング対象なし'}</p>
+            <p className="text-xs text-neutral-500 mt-1 leading-relaxed">
+              {filters.q.trim()
+                ? 'キーワードを変えてお試しください。'
+                : '表示範囲を広げると対象が増えます(例: 300km・全国)。'}
+            </p>
+            {!filters.q.trim() && (
+              <button
+                onClick={() => filters.setMaxDist(0)}
+                className="mt-3 px-4 py-2 rounded-xl bg-ocean-900 text-white text-xs font-bold"
+              >
+                表示範囲を「全国」にする
+              </button>
+            )}
+          </section>
+        )}
 
         {status === 'loading' &&
           [0, 1, 2].map((i) => (
@@ -363,6 +387,15 @@ export function HomeScreen({ ranked, filters, status, stale, lastFetched, refres
             </button>
             <p className="text-center text-[10px] text-neutral-400">表示件数フィルタで「全件」に切り替えることもできます</p>
           </div>
+        )}
+
+        {debug && (
+          <details className="text-[10px] text-neutral-400 px-1">
+            <summary className="cursor-pointer">デバッグ情報</summary>
+            <p className="mt-1 leading-relaxed">
+              評価対象: {debug.evalTargets}件・取得済み: {debug.fetched}件・キャッシュ利用: {debug.cached}件
+            </p>
+          </details>
         )}
 
         <p className="text-[10px] text-neutral-400 leading-relaxed px-1">
